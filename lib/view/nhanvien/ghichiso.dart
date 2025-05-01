@@ -16,7 +16,7 @@ import '../../model/login_data_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 
-Future<GetKyThuResultDto> getKyThu(http.Client client, int userid, String token,
+Future<GetKyThuResultDto> getKyThu(http.Client client, int userid,int tenantid, String token,
     bool isLoggedInOffline, context) async {
   try {
     if (!isLoggedInOffline) {
@@ -29,6 +29,7 @@ Future<GetKyThuResultDto> getKyThu(http.Client client, int userid, String token,
         body: jsonEncode(<String, String>{
           'userid': userid.toString(),
           'token': token,
+          'tenantId': tenantid.toString(),
         }),
       );
 
@@ -84,7 +85,9 @@ class GhiChiSo extends StatefulWidget {
     required this.isLoggedInOffline,
     required this.token,
     required this.username,
-    required this.userid})
+    required this.userid,
+    required this.tenantid,
+  })
       : super(key: key);
 
 
@@ -94,6 +97,7 @@ class GhiChiSo extends StatefulWidget {
   final bool isLoggedInOffline;
   final String username;
   final int userid;
+  final int tenantid;
 
   @override
   _GhiChiSoState createState() => _GhiChiSoState();
@@ -161,6 +165,9 @@ class _GhiChiSoState extends State<GhiChiSo> {
   late int selectedKyThu;
   late String selectedKyThuName;
   var selectedKyThuNameArray = [];
+
+  TextEditingController _searchController = TextEditingController();
+  List<GetKyThuDataDto> _filteredKyThuList = [];
   late Future<GetKyThuResultDto> _getKyThuData;
   List<DropdownMenuItem<int>> kythus = [
     DropdownMenuItem(
@@ -173,7 +180,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   "Chọn sổ",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontSize: 22),
                   textAlign: TextAlign.left,
                 ),
               ))
@@ -210,6 +217,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -230,6 +238,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
           body: jsonEncode(<String, String>{
             'userid': loginRequestResult.result!.userid.toString(),
             'token': loginRequestResult.result!.token,
+            'tenantId': data.tenantid.toString(),
           }),
         );
         hideOpenDialog(context);
@@ -247,8 +256,6 @@ class _GhiChiSoState extends State<GhiChiSo> {
               int demdongbothanhcong = 0;
               for (GetKyThuDataDto dataKyThu in value.data) {
                 dem++;
-
-
                 //dong bo file
                 showLoadingIndicator("Đồng bộ sổ ghi " + dataKyThu.displayText +
                     " lên server ...", context);
@@ -257,105 +264,60 @@ class _GhiChiSoState extends State<GhiChiSo> {
                     "dataKyThuHoGiaDinh" +
                     dataKyThu.id.toString() +
                     ".data";
-                final docFile = await readFile(filename);
-                if (docFile != "N/A") {
-                  demdongbo++;
-                  var t = docFile;
-
-                  String sendJson = jsonEncode(<String, dynamic>{
-                    'userid': loginRequestResult.result!.userid.toString(),
-                    'token': loginRequestResult.result!.token,
-                    "data": t
-                  }).replaceAll("\\", "").replaceAll('"{', '{').replaceAll(
-                      '}"', '}');
-
-                  final responseghi = await client.post(
-                    Uri.https($GetServer,
-                        "api/services/app/MobileAppServices/UpdateSoGhi"),
-                    // headers: <String, String>{
-                    //   'Content-Type': 'application/json; charset=UTF-8',
-                    //   "accept": "application/json",
-                    // },
+                var docFile = await readFile(filename);
+                // print("Đang xử lý ID: ${dataKyThu.id}");
+                // print("Tên file: $filename");
+                if (docFile == "N/A") {
+                  // File chưa có, gọi API để lấy dữ liệu
+                  showLoadingIndicator("Tải dữ liệu sổ " + dataKyThu.displayText + " từ server ...", context);
+                  final responseHoGiaDinh = await client.post(
+                    Uri.https($GetServer, "api/services/app/MobileAppServices/GetKyThuDataForMobile"),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
-                    body: sendJson,
+                    body: jsonEncode(<String, String>{
+                      'userid': loginRequestResult.result!.userid.toString(),
+                      'token': loginRequestResult.result!.token,
+                      'soGhiChiSoId': dataKyThu.id.toString(),
+                      'tenantId': data.tenantid.toString(),
+                    }),
                   );
+                  hideOpenDialog(context);
 
-                  if (responseghi.statusCode == 200) {
-                    demdongbothanhcong++;
-                    //dongbo anh
-                    showLoadingIndicator(
-                        "Đồng bộ ảnh sổ ghi " + dataKyThu.displayText +
-                            " lên server ...", context);
-                    Future<GetGhiChiSoDataResultDto> _dataGhiChiSo;
-                    _dataGhiChiSo =
-                        getData(widget.userid, dataKyThu.id, context);
-                    _dataGhiChiSo.then((value) async {
-                      var tongtailen = 0;
-                      var tongtailenthanhcong = 0;
-                      for (GetGhiChiSoDataDto data in value.data) {
-                        if (data.ghiChiSo.image != "null") {
-                          var file = File(data.ghiChiSo.image);
-                          if (file == null) {
-                            if (data.ghiChiSo.image != 'null') {
-                              tongtailen++;
-                            }
-                            showNotice("Không tải được ảnh của " +
-                                data.hopdongDonghoKhoDongHoDto.tenKhachHang,
-                                context);
-                          }
-                          else {
-                            tongtailen++;
-                            try {
-                              Uint8List tss = await File(data.ghiChiSo.image)
-                                  .readAsBytes();
-
-                              String sendJson = jsonEncode(<dynamic, dynamic>{
-                                'userid': loginRequestResult.result!.userid
-                                    .toString(),
-                                'token': loginRequestResult.result!.token,
-                                "data": tss,
-                                "GhiChiSoId": data.ghiChiSo.id
-                              });
-
-                              final responseghianh = await client.post(
-                                Uri.https($GetServer,
-                                    "api/services/app/MobileAppServices/UpdateSoGhiAnh"),
-                                headers: <String, String>{
-                                  'Content-Type': 'application/json; charset=UTF-8',
-                                  "accept": "application/json",
-                                },
-                                body: sendJson,
-                              );
-                              if (responseghianh.statusCode != 200) {
-                                showNotice("Tải lên lỗi: ảnh của " +
-                                    data.hopdongDonghoKhoDongHoDto.tenKhachHang,
-                                    context);
-                              } else {
-                                tongtailenthanhcong++;
-                              }
-                            } catch (e) {
-                              showNotice("Tải lên lỗi: ảnh của " +
-                                  data.hopdongDonghoKhoDongHoDto.tenKhachHang +
-                                  " không tìm thấy!",
-                                  context);
-                            }
-                          }
-                        }
-                      }
-                      showNotice(
-                          "Tải thành công " + tongtailenthanhcong.toString() +
-                              "/" + tongtailen.toString() + " ảnh", context);
-                      hideOpenDialog(context);
-                    });
-                  }else{
-                    print('Không thể đồng bộ: ${responseghi.statusCode}' );
-                    print('Nội dung lỗi: ${responseghi.body}');
-                    print('Send code json: ${sendJson}');
+                  if (responseHoGiaDinh.statusCode == 200) {
+                    docFile = responseHoGiaDinh.body;
+                    await writeFile(filename, docFile);
+                  } else {
+                    showNotice("Không thể lấy dữ liệu sổ " + dataKyThu.displayText, context);
+                    continue; // bỏ qua sổ này nếu thất bại
                   }
                 }
 
+// tiếp tục xử lý đồng bộ với docFile như cũ
+                demdongbo++;
+                String sendJson = jsonEncode(<String, dynamic>{
+                  'userid': loginRequestResult.result!.userid.toString(),
+                  'token': loginRequestResult.result!.token,
+                  "data": docFile,
+                  'tenantId': data.tenantid.toString()
+                }).replaceAll("\\", "").replaceAll('"{', '{').replaceAll('}"', '}');
+
+                final responseghi = await client.post(
+                  Uri.https($GetServer, "api/services/app/MobileAppServices/UpdateSoGhi"),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                  },
+                  body: sendJson,
+                );
+
+                if (responseghi.statusCode == 200) {
+                  demdongbothanhcong++;
+                } else {
+                  // print("Lỗi khi gửi dữ liệu sổ ${dataKyThu.displayText}: ${responseghi.body}");
+                  _showCupertinoDialog("Lỗi khi gửi dữ liệu sổ ",
+                      "${dataKyThu.displayText}",
+                      context);
+                }
 
                 //end dong bo file
 
@@ -411,6 +373,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -431,6 +394,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
           body: jsonEncode(<String, String>{
             'userid': loginRequestResult.result!.userid.toString(),
             'token': loginRequestResult.result!.token,
+            'tenantId': data.tenantid.toString(),
           }),
         );
         hideOpenDialog(context);
@@ -454,7 +418,9 @@ class _GhiChiSoState extends State<GhiChiSo> {
                           padding: EdgeInsets.all(10.0),
                           child: Text(
                             "Chọn sổ",
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black,
+
+                            ),
                             textAlign: TextAlign.left,
                           ),
                         ))
@@ -516,7 +482,8 @@ class _GhiChiSoState extends State<GhiChiSo> {
                   body: jsonEncode(<String, String>{
                     'userid': loginRequestResult.result!.userid.toString(),
                     'token': loginRequestResult.result!.token,
-                    'soGhiChiSoId': dataKyThu.id.toString()
+                    'soGhiChiSoId': dataKyThu.id.toString(),
+                    'tenantId': data.tenantid.toString(),
                   }),
                 );
                 hideOpenDialog(context);
@@ -559,7 +526,7 @@ class _GhiChiSoState extends State<GhiChiSo> {
     super.initState();
     selectedKyThu = 0;
     _getKyThuData = getKyThu(
-        client, widget.userid, widget.token, widget.isLoggedInOffline, context);
+        client, widget.userid, widget.tenantid, widget.token, widget.isLoggedInOffline, context);
     _getKyThuData.then((value) {
       if (value.status) {
         if (value.data.length > 0) {
@@ -596,7 +563,8 @@ class _GhiChiSoState extends State<GhiChiSo> {
       } else {
         _showCupertinoDialog("Lỗi", value.message, context);
       }
-    });
+    }
+    );
   }
 
 
@@ -650,15 +618,68 @@ class _GhiChiSoState extends State<GhiChiSo> {
                       padding: const EdgeInsets.all(8.0),
                       child: (Column(
                         children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Xin chào " + username + $GetServer,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              )),
+                          // Padding(
+                          //     padding: const EdgeInsets.all(8.0),
+                          //     child: Align(
+                          //       alignment: Alignment.centerLeft,
+                          //       child: Text(
+                          //         "Xin chào " + username + $GetServer,
+                          //         style: const TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //     )),
+                          Container(
+
+                            child: ElevatedButton(
+
+                                onPressed: () async {
+                                  bool? result = await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Xác nhận lấy dữ liệu về'),
+                                        content: const Text(
+                                          'Nếu bạn chưa tải dữ liệu lên, dữ liệu offline sẽ bị xóa và ghi đè? Hãy kiểm tra lại trước khi làm!',
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(false),
+                                            child: const Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+                                            child: const Text('Yes'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  if (result == true) {
+                                    setState(() {
+                                      // Cập nhật giao diện nếu cần
+                                      getDuLieu(client, username, widget.isLoggedInOffline, context);
+                                    });
+                                  }
+                                },
+
+                                child: const Row(
+
+                                  children: <Widget>[
+                                    Icon(Icons.cloud_download, size: 30,),
+                                    Text("Lấy dữ liệu từ server",
+                                      style: TextStyle(
+                                        fontSize: 16
+                                      ),
+                                    ),
+                                    Icon(Icons.cloud_download, size: 30),
+                                  ],
+                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                )),
+
+                            height: 62,
+                            width: 260,
+                            // padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          ),
                           const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Align(
@@ -679,110 +700,85 @@ class _GhiChiSoState extends State<GhiChiSo> {
                           ),
                           Row(
                             children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    showLoadingIndicator(
-                                        "Đang tải dữ liệu ...", context);
-                                    if (selectedKyThu == 0 ||
-                                        selectedKyThu == null) {
-                                      hideOpenDialog(context);
-                                      _showCupertinoDialog("Lỗi",
-                                          "Bạn chưa chọn sổ ghi chỉ số",
-                                          context);
-                                    } else {
-                                      hideOpenDialog(context);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ListGhiChiSo(
-                                                    title: "Danh sách các hộ",
-                                                    isLoggedIn: isLoggedIn,
-                                                    token: token,
-                                                    username: username,
-                                                    userid: userid,
-                                                    selectedKyThu: selectedKyThu,
-                                                    selectedKyThuName: selectedKyThuName,
-                                                    isLoggedInOffline: widget.isLoggedInOffline,
-                                                  )));
-                                    }
-                                  },
-                                  child: const Text("Chọn")),
+                              SizedBox(
+                                width: 90,
+                                height: 50,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      showLoadingIndicator(
+                                          "Đang tải dữ liệu ...", context);
+                                      if (selectedKyThu == 0 ||
+                                          selectedKyThu == null) {
+                                        hideOpenDialog(context);
+                                        _showCupertinoDialog("Lỗi",
+                                            "Bạn chưa chọn sổ ghi chỉ số",
+                                            context);
+                                      } else {
+                                        hideOpenDialog(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ListGhiChiSo(
+                                                      title: "Danh sách các hộ",
+                                                      isLoggedIn: isLoggedIn,
+                                                      token: token,
+                                                      username: username,
+                                                      userid: userid,
+                                                      selectedKyThu: selectedKyThu,
+                                                      selectedKyThuName: selectedKyThuName,
+                                                      isLoggedInOffline: widget.isLoggedInOffline,
+                                                    )));
+                                      }
+                                    },
+                                    child: const Text("Chọn", style: TextStyle(
+                                      fontSize: 16
+                                    ),)),
+                              ),
                               const Text("   "),
-                              ElevatedButton(
-
-
-                                  onPressed: () async {
-                                    bool? result = await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Xác nhận lấy dữ liệu về'),
-                                          content: const Text(
-                                            'Nếu bạn chưa tải dữ liệu lên, dữ liệu offline sẽ bị xóa và ghi đè? Hãy kiểm tra lại trước khi làm!',
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(false),
-                                              child: const Text('No'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
-                                              child: const Text('Yes'),
-                                            ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                   height: 50,
+                                    // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            updateKyThu(client, username,
+                                                widget.isLoggedInOffline, context);
+                                          });
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Icon(Icons.autorenew, size: 20,),
+                                            Text("Tải dữ liệu lên server", style: TextStyle(
+                                              fontSize: 14
+                                            ),),
+                                            Icon(Icons.autorenew, size: 20,),
                                           ],
-                                        );
-                                      },
-                                    );
-
-                                    if (result == true) {
-                                      setState(() {
-                                        // Cập nhật giao diện nếu cần
-                                        getDuLieu(client, username, widget.isLoggedInOffline, context);
-                                      });
-                                    }
-                                  },
-
-                                  child: const Row(
-                                    children: <Widget>[
-                                      Icon(Icons.cloud_download),
-                                      Text("Lấy dữ liệu từ server")
-                                    ],
-                                  )),
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      updateKyThu(client, username,
-                                          widget.isLoggedInOffline, context);
-                                    });
-                                  },
-                                  child: const Row(
-                                    children: <Widget>[
-                                      Icon(Icons.autorenew),
-                                      Text("Tải dữ liệu lên server")
-                                    ],
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    Directory dir = await getTemporaryDirectory();
-                                    dir.deleteSync(recursive: true);
-                                  },
-                                  child: const Row(
-                                    children: <Widget>[
-                                      Icon(Icons.delete),
-                                      Text("Xóa toàn bộ ảnh đã chụp")
-                                    ],
-                                  )),
-                            ],
-                          )
+
+                          // Row(
+                          //   children: [
+                          //     ElevatedButton(
+                          //         onPressed: () async {
+                          //           Directory dir = await getTemporaryDirectory();
+                          //           dir.deleteSync(recursive: true);
+                          //         },
+                          //         child: const Row(
+                          //           children: <Widget>[
+                          //             Icon(Icons.delete),
+                          //             Text("Xóa toàn bộ ảnh đã chụp")
+                          //           ],
+                          //         )),
+                          //   ],
+                          // )
                         ],
                       )),
                     )
@@ -793,5 +789,102 @@ class _GhiChiSoState extends State<GhiChiSo> {
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
+  }// if (docFile != "N/A") {
+//   demdongbo++;
+//   var t = docFile;
+//
+//   String sendJson = jsonEncode(<String, dynamic>{
+//     'userid': loginRequestResult.result!.userid.toString(),
+//     'token': loginRequestResult.result!.token,
+//     "data": t
+//   }).replaceAll("\\", "").replaceAll('"{', '{').replaceAll(
+//       '}"', '}');
+//
+//   final responseghi = await client.post(
+//     Uri.https($GetServer,
+//         "api/services/app/MobileAppServices/UpdateSoGhi"),
+//     // headers: <String, String>{
+//     //   'Content-Type': 'application/json; charset=UTF-8',
+//     //   "accept": "application/json",
+//     // },
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: sendJson,
+//   );
+//
+//   if (responseghi.statusCode == 200) {
+//     demdongbothanhcong++;
+//     //dongbo anh
+//     // showLoadingIndicator(
+//     //     "Đồng bộ ảnh sổ ghi " + dataKyThu.displayText +
+//     //         " lên server ...", context);
+//     // Future<GetGhiChiSoDataResultDto> _dataGhiChiSo;
+//     // _dataGhiChiSo =
+//     //     getData(widget.userid, dataKyThu.id, context);
+//     // _dataGhiChiSo.then((value) async {
+//     //   var tongtailen = 0;
+//     //   var tongtailenthanhcong = 0;
+//     //   for (GetGhiChiSoDataDto data in value.data) {
+//     //     if (data.ghiChiSo.image != "null") {
+//     //       var file = File(data.ghiChiSo.image);
+//     //       if (file == null) {
+//     //         if (data.ghiChiSo.image != 'null') {
+//     //           tongtailen++;
+//     //         }
+//     //         showNotice("Không tải được ảnh của " +
+//     //             data.hopdongDonghoKhoDongHoDto.tenKhachHang,
+//     //             context);
+//     //       }
+//     //       else {
+//     //         tongtailen++;
+//     //         try {
+//     //           Uint8List tss = await File(data.ghiChiSo.image)
+//     //               .readAsBytes();
+//     //
+//     //           String sendJson = jsonEncode(<dynamic, dynamic>{
+//     //             'userid': loginRequestResult.result!.userid
+//     //                 .toString(),
+//     //             'token': loginRequestResult.result!.token,
+//     //             "data": tss,
+//     //             "GhiChiSoId": data.ghiChiSo.id
+//     //           });
+//     //
+//     //           final responseghianh = await client.post(
+//     //             Uri.https($GetServer,
+//     //                 "api/services/app/MobileAppServices/UpdateSoGhiAnh"),
+//     //             headers: <String, String>{
+//     //               'Content-Type': 'application/json; charset=UTF-8',
+//     //               "accept": "application/json",
+//     //             },
+//     //             body: sendJson,
+//     //           );
+//     //           if (responseghianh.statusCode != 200) {
+//     //             showNotice("Tải lên lỗi: ảnh của " +
+//     //                 data.hopdongDonghoKhoDongHoDto.tenKhachHang,
+//     //                 context);
+//     //           } else {
+//     //             tongtailenthanhcong++;
+//     //           }
+//     //         } catch (e) {
+//     //           showNotice("Tải lên lỗi: ảnh của " +
+//     //               data.hopdongDonghoKhoDongHoDto.tenKhachHang +
+//     //               " không tìm thấy!",
+//     //               context);
+//     //         }
+//     //       }
+//     //     }
+//     //   }
+//     //   showNotice(
+//     //       "Tải thành công " + tongtailenthanhcong.toString() +
+//     //           "/" + tongtailen.toString() + " ảnh", context);
+//     //   hideOpenDialog(context);
+//     // });
+//     // print('Send code json: ${sendJson}');
+//   }else{
+//     print('Không thể đồng bộ: ${responseghi.statusCode}' );
+//     print('Nội dung lỗi: ${responseghi.body}');
+//     print('Send code json: ${sendJson}');
+//   }
+// }
 }

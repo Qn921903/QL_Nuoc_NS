@@ -122,9 +122,8 @@ class _ListGhiChiSoState extends State<ListGhiChiSo> {
                 data.hopdongDonghoKhoDongHoDto.serial,
             action: "",
             status: (data.ghiChiSo.tongSuDung==-1)?true:(((data.ghiChiSo.chiSoMoi > 0) ||
-                (data.ghiChiSo.chiSoMoi == data.ghiChiSo.chiSoCu) ||
-                (data.ghiChiSo.chiSoMoi > 0 &&
-                    data.ghiChiSo.tongSuDung < 0))
+                (data.ghiChiSo.chiSoMoi == data.ghiChiSo.chiSoCu && data.ghiChiSo.chiSoMoi != 0) ||
+                (data.ghiChiSo.chiSoMoi > 0 && data.ghiChiSo.tongSuDung < 0))
                 ? true
                 : false),
             token: widget.token,
@@ -503,7 +502,7 @@ class _SelectActionState extends State<SelectAction> {
       });
     } else if (result != null) {
       setState(() {
-        widget.ghichiso.image = result.anh;
+        // widget.ghichiso.image = result.anh;
         ghichu = result.ghichu;
       });
     }

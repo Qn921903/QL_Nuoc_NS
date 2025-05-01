@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../view_model/chitiet_tracuu_viewmodel.dart';
@@ -14,6 +15,8 @@ class DetailHopDong extends StatefulWidget {
 }
 
 class _DetailHopDongState extends State<DetailHopDong> {
+  final String phoneNumber = "0901234567";
+  final String email = "example@email.com";
   // Hàm format ngày tháng
   String formatDateString(String inputDate) {
     try {
@@ -22,6 +25,11 @@ class _DetailHopDongState extends State<DetailHopDong> {
     } catch (e) {
       return 'Lỗi định dạng ngày';
     }
+  }
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    // Hiển thị thông báo đã sao chép thành công
+    // print('Đã sao chép: $text');
   }
 
   @override
@@ -155,24 +163,50 @@ class _DetailHopDongState extends State<DetailHopDong> {
                   ),
                    const SizedBox(height: 10),
                   // TextField để thay đổi thông tin
-                  Container(
-                    width: double.infinity,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Điền thông tin cần thay đổi',
-                        border: InputBorder.none,
-                      ),
-                      maxLines: null,
-                      expands: true,
-                      keyboardType: TextInputType.multiline,
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue, width: 2),
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  padding: const EdgeInsets.all(5),
+                  child: Column(
+                    children: [
+                      Text('Liên hệ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400), textAlign: TextAlign.center,),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Số điện thoại: $phoneNumber',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.copy),
+                            onPressed: () => _copyToClipboard(phoneNumber),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Email: $email',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.copy),
+                            onPressed: () => _copyToClipboard(email),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
                   const SizedBox(height: 20),
                   ],
               ),

@@ -442,7 +442,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                           Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                  color: Colors.green,
+                                  // color: Colors.green,
+                                  color: Color(0xFFB3E5FC),
                                   padding: const EdgeInsets.all(18.0),
                                   child: Column(
                                     mainAxisAlignment:
@@ -454,7 +455,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
-                                              color: Colors.white,
+                                              // color: Colors.white,
+                                              color: Colors.black87,
                                             )),
                                       ),
                                       Align(
@@ -466,7 +468,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.location_on_outlined,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -475,7 +478,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     fontWeight:
                                                     FontWeight.normal,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -490,7 +494,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.phone,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -499,7 +504,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     fontWeight:
                                                     FontWeight.normal,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -517,7 +523,7 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     color: Colors.white),
                                               ),
                                               TextSpan(
-                                                  text: " CSC: " +
+                                                  text: "Chỉ số cũ: " +
                                                       widget
                                                           .chiTietThanhToanDataDto
                                                           .chiTietThanhToan
@@ -527,7 +533,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                               const WidgetSpan(
                                                 child: Icon(Icons.lock_clock,
@@ -535,7 +542,7 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     color: Colors.white),
                                               ),
                                               TextSpan(
-                                                  text: " CSM: " +
+                                                  text: " Chỉ số mới: " +
                                                       widget
                                                           .chiTietThanhToanDataDto
                                                           .chiTietThanhToan
@@ -544,7 +551,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -559,7 +567,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.calculate,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -573,7 +582,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     fontWeight:
                                                     FontWeight.normal,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -588,7 +598,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.money_outlined,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -602,7 +613,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -616,7 +628,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.money_outlined,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -628,7 +641,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -643,7 +657,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.date_range,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
@@ -652,7 +667,8 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                     fontWeight:
                                                     FontWeight.normal,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -667,16 +683,18 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 child: Icon(
                                                   Icons.people_alt_outlined,
                                                   size: 18,
-                                                  color: Colors.white,
+                                                  // color: Colors.white
+                                              color: Colors.black87,
                                                 ),
                                               ),
                                               TextSpan(
-                                                  text: "Nguoi thu: "+widget.chiTietThanhToanDataDto.chiTietThanhToan.tenNguoiThu,
+                                                  text: "Người thu: "+widget.chiTietThanhToanDataDto.chiTietThanhToan.tenNguoiThu,
                                                   style: const TextStyle(
                                                     fontWeight:
                                                     FontWeight.normal,
                                                     fontSize: 14,
-                                                    color: Colors.white,
+                                                    // color: Colors.white
+                                              color: Colors.black87,
                                                   )),
                                             ],
                                           ),
@@ -690,8 +708,13 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                   padding: const EdgeInsets.all(8.0),
                                   decoration: const BoxDecoration(),
                                   child: Column(
+
                                     children: <Widget>[
+
                                       Row(
+
+                                        mainAxisAlignment: MainAxisAlignment.center,
+
                                         children: [
                                           ((!widget.status)?ElevatedButton(
                                               onPressed: () async {
@@ -722,45 +745,45 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 );
 
                                                 if (result) {
-                                                  if(!_connected){
-                                                    // _connect();
-                                                  };
+                                                  // if(!_connected){
+                                                  //   // _connect();
+                                                  // };
 
-                                                  if(!_connected){
-                                                    // _tesPrint(widget.chiTietThanhToanDataDto,"BIÊN NHẬN THANH TOÁN");
-                                                    var t = updateThanhToan(client, widget.username, widget.chiTietThanhToanDataDto.chiTietThanhToan.id, context);
-                                                    t.then((value){
-                                                      if(value){
-                                                        Navigator.pop(
-                                                            context,
-                                                            new ReturnBackFromGhiChiSo(
-                                                                status: true,
-                                                                chisomoi: int.parse(
-                                                                    _chisomoi.text),
-                                                                anh: "",
-                                                                ghichu: ""
-                                                            ));
-                                                      }else{
-                                                        Navigator.pop(
-                                                            context,
-                                                            new ReturnBackFromGhiChiSo(
-                                                                status: false,
-                                                                chisomoi: int.parse(
-                                                                    _chisomoi.text),
-                                                                anh: "",
-                                                                ghichu: ""
-                                                            ));
-                                                      }
-                                                    });
-
-                                                  }
-                                                } else {
-
+                                                  // if(!_connected){
+                                                  //   // _tesPrint(widget.chiTietThanhToanDataDto,"BIÊN NHẬN THANH TOÁN");
+                                                  //
+                                                  //
+                                                  // }
+                                                  var t = updateThanhToan(client, widget.username, widget.chiTietThanhToanDataDto.chiTietThanhToan.id, context);
+                                                  t.then((value){
+                                                    if(value){
+                                                      Navigator.pop(
+                                                          context,
+                                                          new ReturnBackFromGhiChiSo(
+                                                              status: true,
+                                                              chisomoi: int.parse(
+                                                                  _chisomoi.text),
+                                                              // anh: "",
+                                                              ghichu: ""
+                                                          ));
+                                                    }else{
+                                                      Navigator.pop(
+                                                          context,
+                                                          new ReturnBackFromGhiChiSo(
+                                                              status: false,
+                                                              chisomoi: int.parse(
+                                                                  _chisomoi.text),
+                                                              // anh: "",
+                                                              ghichu: ""
+                                                          ));
+                                                    }
+                                                  });
                                                 }
 
                                               },
                                               child: const Text(
-                                                  "Thanh toán và in phiếu thu")):
+                                                  // "Thanh toán và in phiếu thu")):
+                                                  "Thanh toán")):
                                           ElevatedButton(
                                               onPressed: () async {
                                                 bool result = await showDialog(
@@ -790,38 +813,35 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                 );
 
                                                 if (result) {
-                                                  if(!_connected){
-                                                    // _connect();
-                                                  };
+                                                  // if(!_connected){
+                                                  //   // _connect();
+                                                  // };
 
-                                                  if(!_connected){
-
-                                                    var t = updateHuyThanhToan(client, widget.username, widget.chiTietThanhToanDataDto.chiTietThanhToan.id, context);
-                                                    t.then((value){
-                                                      if(value){
-                                                        Navigator.pop(
-                                                            context,
-                                                            new ReturnBackFromGhiChiSo(
-                                                                status: false,
-                                                                chisomoi: int.parse(
-                                                                    _chisomoi.text),
-                                                                anh: "",
-                                                                ghichu: ""
-                                                            ));
-                                                      }else{
-                                                        Navigator.pop(
-                                                            context,
-                                                            new ReturnBackFromGhiChiSo(
-                                                                status: true,
-                                                                chisomoi: int.parse(
-                                                                    _chisomoi.text),
-                                                                anh: "",
-                                                                ghichu: ""
-                                                            ));
-                                                      }
-                                                    });
-
-                                                  }
+                                                  // if(!_connected){}
+                                                  var t = updateHuyThanhToan(client, widget.username, widget.chiTietThanhToanDataDto.chiTietThanhToan.id, context);
+                                                  t.then((value){
+                                                    if(value){
+                                                      Navigator.pop(
+                                                          context,
+                                                          new ReturnBackFromGhiChiSo(
+                                                              status: false,
+                                                              chisomoi: int.parse(
+                                                                  _chisomoi.text),
+                                                              // anh: "",
+                                                              ghichu: ""
+                                                          ));
+                                                    }else{
+                                                      Navigator.pop(
+                                                          context,
+                                                          new ReturnBackFromGhiChiSo(
+                                                              status: true,
+                                                              chisomoi: int.parse(
+                                                                  _chisomoi.text),
+                                                              // anh: "",
+                                                              ghichu: ""
+                                                          ));
+                                                    }
+                                                  });
                                                 } else {
 
                                                 }
@@ -883,6 +903,7 @@ Future<bool> updateThanhToan(http.Client client,String account, int id, BuildCon
       body: jsonEncode(<String, String>{
         'accountName': account,
         'passWord': data.password,
+        'tenantId': data.tenantid.toString(),
       }),
     );
     hideOpenDialog(context);
@@ -902,7 +923,8 @@ Future<bool> updateThanhToan(http.Client client,String account, int id, BuildCon
         body: jsonEncode(<String, String>{
           'userid': loginRequestResult.result!.userid.toString(),
           'token': loginRequestResult.result!.token,
-          'thanhToanId': id.toString()
+          'thanhToanId': id.toString(),
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -950,6 +972,7 @@ Future<bool> updateHuyThanhToan(http.Client client,String account, int id, Build
       body: jsonEncode(<String, String>{
         'accountName': account,
         'passWord': data.password,
+        'tenantId': data.tenantid.toString(),
       }),
     );
     hideOpenDialog(context);
@@ -969,7 +992,8 @@ Future<bool> updateHuyThanhToan(http.Client client,String account, int id, Build
         body: jsonEncode(<String, String>{
           'userid': loginRequestResult.result!.userid.toString(),
           'token': loginRequestResult.result!.token,
-          'thanhToanId': id.toString()
+          'thanhToanId': id.toString(),
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);

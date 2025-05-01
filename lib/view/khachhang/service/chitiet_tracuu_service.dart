@@ -24,7 +24,7 @@ class HoaDonService {
       final data = json.decode(response.body);
       return ThanhToanDataDto.fromJson(data['result']);
     } else {
-      print("API Error: ${response.statusCode}");
+      // print("API Error: ${response.statusCode}");
       return null;
     }
   }

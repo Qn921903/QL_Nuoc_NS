@@ -79,57 +79,57 @@ Future updateGhichiso(int id, int chisomoi, int userid, int selectedKyThu,
     _showCupertinoDialog('Lỗi', e.toString() + '!', context);
   }
 }
-
-Future<String> updateAnh(int id, String image, int userid, int selectedKyThu,
-    BuildContext context) async {
-  try {
-    final response = await readFile("user" +
-        userid.toString() +
-        "dataKyThuHoGiaDinh" +
-        selectedKyThu.toString() +
-        ".data");
-    if (response != "N/A") {
-      var images = "";
-      GetGhiChiSoDataResultDto result =
-          GetGhiChiSoDataResultDto.fromJson(jsonDecode(response));
-      showLoadingIndicator("Đang chuyển ảnh thành dữ liệu ...", context);
-
-      for (GetGhiChiSoDataDto data in result.data) {
-        if (data.ghiChiSo.id == id) {
-          data.ghiChiSo.image = (image).toString();
-          images = data.ghiChiSo.image;
-          hideOpenDialog(context);
-          break;
-        }
-      }
-      var t = jsonEncode(result.toJson())
-          .replaceAll("\\", "")
-          .replaceAll('"[', "[")
-          .replaceAll(']"', ']')
-          .replaceAll('"{', '{')
-          .replaceAll('}",', '},');
-
-      writeFile(
-          "user" +
-              userid.toString() +
-              "dataKyThuHoGiaDinh" +
-              selectedKyThu.toString() +
-              ".data",
-          t);
-      return images;
-    } else {
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(const SnackBar(
-            content: Text(
-                "Không tải được file dữ liệu. Vui lòng cập nhật sổ ghi chỉ số!")));
-      return "";
-    }
-  } catch (e) {
-    _showCupertinoDialog('Lỗi', e.toString() + '!', context);
-    return "";
-  }
-}
+//
+// Future<String> updateAnh(int id, String image, int userid, int selectedKyThu,
+//     BuildContext context) async {
+//   try {
+//     final response = await readFile("user" +
+//         userid.toString() +
+//         "dataKyThuHoGiaDinh" +
+//         selectedKyThu.toString() +
+//         ".data");
+//     if (response != "N/A") {
+//       var images = "";
+//       GetGhiChiSoDataResultDto result =
+//           GetGhiChiSoDataResultDto.fromJson(jsonDecode(response));
+//       showLoadingIndicator("Đang chuyển ảnh thành dữ liệu ...", context);
+//
+//       for (GetGhiChiSoDataDto data in result.data) {
+//         if (data.ghiChiSo.id == id) {
+//           data.ghiChiSo.image = (image).toString();
+//           images = data.ghiChiSo.image;
+//           hideOpenDialog(context);
+//           break;
+//         }
+//       }
+//       var t = jsonEncode(result.toJson())
+//           .replaceAll("\\", "")
+//           .replaceAll('"[', "[")
+//           .replaceAll(']"', ']')
+//           .replaceAll('"{', '{')
+//           .replaceAll('}",', '},');
+//
+//       writeFile(
+//           "user" +
+//               userid.toString() +
+//               "dataKyThuHoGiaDinh" +
+//               selectedKyThu.toString() +
+//               ".data",
+//           t);
+//       return images;
+//     } else {
+//       ScaffoldMessenger.of(context)
+//         ..removeCurrentSnackBar()
+//         ..showSnackBar(const SnackBar(
+//             content: Text(
+//                 "Không tải được file dữ liệu. Vui lòng cập nhật sổ ghi chỉ số!")));
+//       return "";
+//     }
+//   } catch (e) {
+//     _showCupertinoDialog('Lỗi', e.toString() + '!', context);
+//     return "";
+//   }
+// }
 //end update ghi chi so
 
 class ThucHienGhi extends StatefulWidget {
@@ -218,6 +218,7 @@ class _ThucHienGhiState extends State<ThucHienGhi> {
     _ghichu = TextEditingController(
         text: (widget.ghichu != null) ? widget.ghichu.toString() : "");
   }
+
   //
   _navigateAnhAndDisplaySelection(BuildContext context) async {
     final result = await Navigator.push(
@@ -429,36 +430,36 @@ class _ThucHienGhiState extends State<ThucHienGhi> {
                                       ),
                                     ],
                                   ))),
-                          const Padding(
-                            padding: EdgeInsets.all(0),
-                            child: Text("Ảnh"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(0),
-                            child: (imgPath == "" &&
-                                    (widget.ghichiso.image == "" ||
-                                        widget.ghichiso.image == "null"))
-                                ? Image.asset(
-                                    // "./assets/image/logo1.png",
-                                    "./assets/image/noimg.jpg",
-                                    width: 120,
-                                  )
-                                : ((widget.ghichiso.image != "" &&
-                                        widget.ghichiso.image != "null")
-                                    ? Image.file(
-                                        File(widget.ghichiso.image),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : ((imgPath != "")
-                                        ? Image.file(
-                                            File(imgPath),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.asset(
-                                            "./assets/image/noimg.jpg",
-                                            width: 120,
-                                          ))),
-                          ),
+                          // const Padding(
+                          //   padding: EdgeInsets.all(0),
+                          //   child: Text("Ảnh"),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(0),
+                          //   child: (imgPath == "" &&
+                          //           (widget.ghichiso.image == "" ||
+                          //               widget.ghichiso.image == "null"))
+                          //       ? Image.asset(
+                          //           // "./assets/image/logo1.png",
+                          //           "./assets/image/noimg.jpg",
+                          //           width: 120,
+                          //         )
+                          //       : ((widget.ghichiso.image != "" &&
+                          //               widget.ghichiso.image != "null")
+                          //           ? Image.file(
+                          //               File(widget.ghichiso.image),
+                          //               fit: BoxFit.cover,
+                          //             )
+                          //           : ((imgPath != "")
+                          //               ? Image.file(
+                          //                   File(imgPath),
+                          //                   fit: BoxFit.cover,
+                          //                 )
+                          //               : Image.asset(
+                          //                   "./assets/image/noimg.jpg",
+                          //                   width: 120,
+                          //                 ))),
+                          // ),
                           Padding(
                               padding: const EdgeInsets.all(0),
                               child: Container(
@@ -477,172 +478,173 @@ class _ThucHienGhiState extends State<ThucHienGhi> {
                                                       "Chưa nhập chỉ số mới",
                                                       context);
                                                 } else {
-                                                  if((int.parse(_chisomoi.text
-                                                      .toString()) -
-                                                      widget.chisocu)<0){
+                                                  if ((int.parse(_chisomoi.text
+                                                              .toString()) -
+                                                          widget.chisocu) <
+                                                      0) {
                                                     bool resultcheckam =
-                                                    await showDialog(
+                                                        await showDialog(
                                                       context: context,
                                                       builder: (context) {
                                                         return AlertDialog(
-                                                          title: const Text('Chú ý'),
-                                                          content: const Text('Chỉ số mới nhỏ hơn chỉ số cũ! Tiếp tục?'),
+                                                          title: const Text(
+                                                              'Chú ý'),
+                                                          content: const Text(
+                                                              'Chỉ số mới nhỏ hơn chỉ số cũ! Tiếp tục?'),
                                                           actions: <Widget>[
                                                             TextButton(
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                    true)
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
                                                                     .pop(
-                                                                    false); // dismisses only the dialog and returns false
+                                                                        false); // dismisses only the dialog and returns false
                                                               },
-                                                              child: const Text('No'),
+                                                              child: const Text(
+                                                                  'No'),
                                                             ),
                                                             TextButton(
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                    true)
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
                                                                     .pop(
-                                                                    true); // dismisses only the dialog and returns true
+                                                                        true); // dismisses only the dialog and returns true
                                                               },
-                                                              child:
-                                                              const Text('Yes'),
+                                                              child: const Text(
+                                                                  'Yes'),
                                                             ),
                                                           ],
                                                         );
                                                       },
                                                     );
-                                                    if(!resultcheckam){
+                                                    if (!resultcheckam) {
                                                       // return false;
                                                     }
                                                   }
 
                                                   if (((int.parse(_chisomoi.text
-                                                        .toString()) -
-                                                        widget.chisocu) *
-                                                        widget.heSoTieuThu) >
-                                                        2 *
-                                                            widget
-                                                                .tongSuDungThangTruoc && ((int.parse(_chisomoi
-                                                        .text
-                                                        .toString()) -
-                                                        widget
-                                                            .chisocu) *
-                                                        widget
-                                                            .heSoTieuThu)>10) {
-                                                      bool result =
-                                                      await showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return AlertDialog(
-                                                            title: const Text('Chú ý'),
-                                                            content: Text('Tổng sử dụng tăng đột biến so với tháng trước (' +
-                                                                ((int.parse(_chisomoi
-                                                                    .text
-                                                                    .toString()) -
-                                                                    widget
-                                                                        .chisocu) *
-                                                                    widget
-                                                                        .heSoTieuThu)
-                                                                    .toString() +
-                                                                ' - ' +
-                                                                widget
-                                                                    .tongSuDungThangTruoc
-                                                                    .toString() +
-                                                                ')! Tiếp tục?'),
-                                                            actions: <Widget>[
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                      context,
-                                                                      rootNavigator:
-                                                                      true)
-                                                                      .pop(
-                                                                      false); // dismisses only the dialog and returns false
-                                                                },
-                                                                child: const Text('No'),
-                                                              ),
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                      context,
-                                                                      rootNavigator:
-                                                                      true)
-                                                                      .pop(
-                                                                      true); // dismisses only the dialog and returns true
-                                                                },
-                                                                child:
-                                                                const Text('Yes'),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                      if (!result) {
-                                                        // return false;
-                                                      }
-
-                                                    }
-                                                      var anh = "";
-                                                      if (returnBackUint8ListContainer != null) {
-                                                        anh = await updateAnh(
-                                                            widget.id,
-                                                            imgPath,
-                                                            widget.userid,
-                                                            widget.selectedKyThu,
-                                                            context);
-                                                      }
-                                                      await updateGhichiso(
-                                                          widget.id,
-                                                          int.parse(_chisomoi.text
-                                                              .toString()),
-                                                          widget.userid,
-                                                          widget.selectedKyThu,
-                                                          (int.parse(_chisomoi
-                                                              .text
-                                                              .toString()) -
+                                                                      .toString()) -
+                                                                  widget
+                                                                      .chisocu) *
                                                               widget
-                                                                  .chisocu) *
-                                                              widget.heSoTieuThu,
-                                                          _ghichu.text,
-                                                          context);
-                                                      if (int.parse(_chisomoi.text
+                                                                  .heSoTieuThu) >
+                                                          2 *
+                                                              widget
+                                                                  .tongSuDungThangTruoc &&
+                                                      ((int.parse(_chisomoi.text
+                                                                      .toString()) -
+                                                                  widget
+                                                                      .chisocu) *
+                                                              widget
+                                                                  .heSoTieuThu) >
+                                                          10) {
+                                                    bool result =
+                                                        await showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Chú ý'),
+                                                          content: Text('Tổng sử dụng tăng đột biến so với tháng trước (' +
+                                                              ((int.parse(_chisomoi
+                                                                              .text
+                                                                              .toString()) -
+                                                                          widget
+                                                                              .chisocu) *
+                                                                      widget
+                                                                          .heSoTieuThu)
+                                                                  .toString() +
+                                                              ' - ' +
+                                                              widget
+                                                                  .tongSuDungThangTruoc
+                                                                  .toString() +
+                                                              ')! Tiếp tục?'),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop(
+                                                                        false); // dismisses only the dialog and returns false
+                                                              },
+                                                              child: const Text(
+                                                                  'No'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop(
+                                                                        true); // dismisses only the dialog and returns true
+                                                              },
+                                                              child: const Text(
+                                                                  'Yes'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                    if (!result) {
+                                                      // return false;
+                                                    }
+                                                  }
+                                                  // var anh = "";
+                                                  // if (returnBackUint8ListContainer !=
+                                                  //     null) {
+                                                  //   anh = await updateAnh(
+                                                  //       widget.id,
+                                                  //       imgPath,
+                                                  //       widget.userid,
+                                                  //       widget.selectedKyThu,
+                                                  //       context);
+                                                  // }
+                                                  await updateGhichiso(
+                                                      widget.id,
+                                                      int.parse(_chisomoi.text
+                                                          .toString()),
+                                                      widget.userid,
+                                                      widget.selectedKyThu,
+                                                      (int.parse(_chisomoi.text
+                                                                  .toString()) -
+                                                              widget.chisocu) *
+                                                          widget.heSoTieuThu,
+                                                      _ghichu.text,
+                                                      context);
+                                                  if (int.parse(_chisomoi.text
                                                           .toString()) ==
-                                                          widget.chisomoi) {
-                                                        Navigator.pop(
-                                                            context,
-                                                            ReturnBackFromGhiChiSo(
-                                                                status: (int.parse(
-                                                                    _chisomoi
-                                                                        .text) ==
-                                                                    0 &&
+                                                      widget.chisomoi) {
+                                                    Navigator.pop(
+                                                        context,
+                                                        ReturnBackFromGhiChiSo(
+                                                            status:
+                                                                (int.parse(_chisomoi
+                                                                            .text) ==
+                                                                        0 &&
                                                                     widget.chisocu ==
                                                                         0),
-                                                                chisomoi:
-                                                                int.parse(
-                                                                    _chisomoi
-                                                                        .text),
-                                                                anh: anh,
-                                                                ghichu: _ghichu
-                                                                    .text));
-                                                      } else {
-                                                        Navigator.pop(
-                                                            context,
-                                                            ReturnBackFromGhiChiSo(
-                                                                status: true,
-                                                                chisomoi:
-                                                                int.parse(
-                                                                    _chisomoi
-                                                                        .text),
-                                                                anh: anh,
-                                                                ghichu: _ghichu
-                                                                    .text));
-                                                      }
-
-
+                                                            chisomoi: int.parse(
+                                                                _chisomoi.text),
+                                                            // anh: anh,
+                                                            ghichu:
+                                                                _ghichu.text));
+                                                  } else {
+                                                    Navigator.pop(
+                                                        context,
+                                                        ReturnBackFromGhiChiSo(
+                                                            status: true,
+                                                            chisomoi: int.parse(
+                                                                _chisomoi.text),
+                                                            // anh: anh,
+                                                            ghichu:
+                                                                _ghichu.text));
+                                                  }
                                                 }
                                               },
                                               child: const Text("Lưu lại")),
@@ -650,15 +652,15 @@ class _ThucHienGhiState extends State<ThucHienGhi> {
                                           ElevatedButton(
                                               onPressed: () async {
                                                 var anh = "";
-                                                if (returnBackUint8ListContainer !=
-                                                    null) {
-                                                  anh = await updateAnh(
-                                                      widget.id,
-                                                      imgPath,
-                                                      widget.userid,
-                                                      widget.selectedKyThu,
-                                                      context);
-                                                }
+                                                // if (returnBackUint8ListContainer !=
+                                                //     null) {
+                                                //   anh = await updateAnh(
+                                                //       widget.id,
+                                                //       imgPath,
+                                                //       widget.userid,
+                                                //       widget.selectedKyThu,
+                                                //       context);
+                                                // }
                                                 await updateGhichiso(
                                                     widget.id,
                                                     -1,
@@ -676,17 +678,17 @@ class _ThucHienGhiState extends State<ThucHienGhi> {
                                                         status: false,
                                                         chisomoi: int.parse(
                                                             _chisomoi.text),
-                                                        anh: anh,
+                                                        // anh: anh,
                                                         ghichu: _ghichu.text));
                                               },
                                               child: const Text("Lưu ghi chú")),
                                           const Text("   "),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                _navigateAnhAndDisplaySelection(
-                                                    context);
-                                              },
-                                              child: const Text("Chụp ảnh")),
+                                          // ElevatedButton(
+                                          //     onPressed: () {
+                                          //       _navigateAnhAndDisplaySelection(
+                                          //           context);
+                                          //     },
+                                          //     child: const Text("Chụp ảnh")),
                                         ],
                                       )
                                     ],

@@ -30,7 +30,7 @@ Future<bool?> getStatusFromPrefs() async {
 
   if (jsonString != null) {
     final Map<String, dynamic> data = jsonDecode(jsonString);
-    print("Kiểu dữ liệu status trong JSON: ${data["result"]?["status"]} - ${data["result"]?["status"].runtimeType}");
+   // print("Kiểu dữ liệu status trong JSON: ${data["result"]?["status"]} - ${data["result"]?["status"].runtimeType}");
     return data["result"]?["status"];
   }
   return null;

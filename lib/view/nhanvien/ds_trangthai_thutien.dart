@@ -69,13 +69,13 @@ class ListThanhToan extends StatefulWidget {
   _ListThanhToanState createState() => _ListThanhToanState();
 }
 
-class ItemSelectBox {
-  const ItemSelectBox(this.name, this.icon, this.value);
-
-  final String name;
-  final Icon icon;
-  final int value;
-}
+// class ItemSelectBox {
+//   const ItemSelectBox(this.name, this.icon, this.value);
+//
+//   final String name;
+//   final Icon icon;
+//   final int value;
+// }
 List<SelectAction> _selectActions = [];
 class _ListThanhToanState extends State<ListThanhToan> {
   var client = http.Client();
@@ -111,6 +111,7 @@ class _ListThanhToanState extends State<ListThanhToan> {
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
+          'tenantId':data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -131,7 +132,8 @@ class _ListThanhToanState extends State<ListThanhToan> {
           body: jsonEncode(<String, String>{
             'userid': loginRequestResult.result!.userid.toString(),
             'token': loginRequestResult.result!.token,
-            'soThanhToanId': soid.toString()
+            'soThanhToanId': soid.toString(),
+            'tenantId': data.tenantid.toString()
           }),
         );
         hideOpenDialog(context);
@@ -380,13 +382,13 @@ class SelectAction extends StatefulWidget {
         required this.status})
       : super(key: key) {
     // TODO: implement SelectAction
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
   final String name;
   final String address;
   final String action;
-late  IconData icon;
- late Color color;
+// late  IconData icon;
+//  late Color color;
   final String token;
   final bool isLoggedIn;
   final bool isLoggedInOffline;
@@ -406,7 +408,7 @@ class _SelectActionState extends State<SelectAction> {
   late String name;
   late String address;
   late String action;
-  late IconData icon;
+  // late IconData icon;
   late Color color;
   late String token;
   late bool isLoggedIn;
@@ -427,8 +429,8 @@ class _SelectActionState extends State<SelectAction> {
     name = widget.name;
     address = widget.address;
     action = widget.action;
-    icon = widget.icon;
-    color = widget.color;
+    // icon = widget.icon;
+    // color = widget.color;
     token = widget.token;
     isLoggedIn = widget.isLoggedIn;
     isLoggedInOffline = widget.isLoggedInOffline;
@@ -479,8 +481,8 @@ class _SelectActionState extends State<SelectAction> {
 
   @override
   Widget build(BuildContext context) {
-    icon = (status) ? Icons.check : Icons.remove;
-    color = (status) ? Colors.lightGreen : Colors.redAccent;
+    IconData icon = (status) ? Icons.check : Icons.remove;
+    Color color = (status) ? Colors.lightGreen : Colors.redAccent;
     final f = NumberFormat("#,### VNĐ", "vi_VN");
     return Container(
         padding: const EdgeInsets.all(2),

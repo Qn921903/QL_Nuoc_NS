@@ -99,6 +99,7 @@ class _ThuTienState extends State<ThuTien> {
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -119,6 +120,7 @@ class _ThuTienState extends State<ThuTien> {
           body: jsonEncode(<String, String>{
             'userid': loginRequestResult.result!.userid.toString(),
             'token': loginRequestResult.result!.token,
+            'tenantId':data.tenantid.toString(),
           }),
         );
         hideOpenDialog(context);

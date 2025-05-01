@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:qly_chi_so_nuoc/drawer/tabbar_view.dart';
@@ -31,8 +30,8 @@ class MyHttpOverrides extends HttpOverrides {
   // }
 }
 
-Future<LoginRequestResult> login(
-    http.Client client, String account, String password, bool saveInfo, context) async {
+Future<LoginRequestResult> login(http.Client client, String account,
+    int tenantid, String password, bool saveInfo, context) async {
   try {
     showLoadingIndicator("Đăng nhập ...", context);
     final response = await client.post(
@@ -43,6 +42,7 @@ Future<LoginRequestResult> login(
       body: jsonEncode(<String, String>{
         'accountName': account,
         'passWord': password,
+        'tenantId': tenantid.toString(),
       }),
     );
     hideOpenDialog(context);
@@ -62,7 +62,6 @@ Future<LoginRequestResult> login(
         await prefs.setBool('saveInfo', false);
       }
 
-
       return LoginRequestResult.fromJson(jsonDecode(response.body));
     } else {
       _showCupertinoDialog('Lỗi',
@@ -70,21 +69,22 @@ Future<LoginRequestResult> login(
       throw Exception('Đăng nhập thất bại');
     }
   } catch (e) {
-    print('Lỗi đăng nhập---------: ${e.toString()}');
+    // print('Lỗi đăng nhập---------: ${e.toString()}');
     showNotice('Lỗi $e!', context);
     throw Exception('Đăng nhập thất bại: ' + e.toString());
     hideOpenDialog(context);
   }
 }
 
-Future<LoginRequestResult> loginOffline(
-    http.Client client, String account, String password, context) async {
+Future<LoginRequestResult> loginOffline(http.Client client, String account,
+    String password, int tenantid, context) async {
   try {
     writeFile(
         "auths.data",
         json.encode(LoginOfflineData(
           username: account,
           password: password,
+          tenantid: 2,
           userid: 1,
         ).toJson()));
     showLoadingIndicator("Đăng nhập ...", context);
@@ -166,8 +166,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key, required this.title});
 
-
-
   final String title;
 
   @override
@@ -210,8 +208,10 @@ _showCupertinoDialog(String title, String content, BuildContext context) {
 
 class _MyHomePageState extends State<MyHomePage> {
   var client = http.Client();
+
   final _account = TextEditingController();
   final _password = TextEditingController();
+  final _tenantId = TextEditingController(text: '2');
   bool rememberMe = false;
   bool _validate = false;
   bool isBusy = false;
@@ -228,10 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
   late String password1;
   bool _obscureText = true;
   bool saveInfo = false;
-
-
-
-
 // Hàm load tài khoản đã lưu
   void _loadSavedAccount() async {
     final prefs = await SharedPreferences.getInstance();
@@ -239,7 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
     String? savedPassword = prefs.getString('password');
     bool? savedSaveInfo = prefs.getBool('saveInfo');
 
-    if (savedUsername != null && savedPassword != null && savedSaveInfo == true) {
+    if (savedUsername != null &&
+        savedPassword != null &&
+        savedSaveInfo == true) {
       _account.text = savedUsername;
       _password.text = savedPassword;
       saveInfo = true;
@@ -249,6 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {}); // Cập nhật giao diện
   }
+
   @override
   void initState() {
     _loadSavedAccount();
@@ -261,12 +260,10 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _account.text = data.username;
           _password.text = data.password;
-
         });
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -280,10 +277,13 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         });
 
+    int tenantid = int.tryParse(_tenantId.text) ?? 2;
+
     return Scaffold(
         // appBar: AppBar(
         //   title: Text(widget.title),
         // ),
+
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -308,11 +308,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       const CircleAvatar(
                         radius: 80, // Kích thước ảnh
-                        backgroundImage: AssetImage('./assets/image/logo_app_nuoc-removebg-preview.png'),
+                        backgroundImage: AssetImage(
+                            './assets/image/logo_app_nuoc-removebg-preview.png'),
 
                         backgroundColor: Color(0xFFEEEEEE),
                       ),
-
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          obscureText: false,
+                          enabled: false,
+                          controller: _tenantId,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Tenant ID',
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -334,7 +346,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             labelText: 'Mật khẩu',
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscureText ? Icons.visibility_off : Icons.visibility,
+                                _obscureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -365,8 +379,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // OutlinedButton(onPressed: (){}, child: Icon(Icons.remove_red_eye_outlined)),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Column(
                           children: [
                             SizedBox(
                               height: 45,
@@ -384,8 +397,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                         context);
                                   } else {
                                     setState(() {
-                                      _futureLogin = login(client, _account.text,
-                                          _password.text, saveInfo, context);
+                                      _futureLogin = login(
+                                          client,
+                                          _account.text,
+                                          tenantid,
+                                          _password.text,
+                                          saveInfo,
+                                          context);
                                       _futureLogin.then((value) {
                                         if (value != null) {
                                           bool status = value.result!.status;
@@ -401,13 +419,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 json.encode(LoginOfflineData(
                                                   username: _account.text,
                                                   password: _password.text,
+                                                  tenantid: tenantid,
                                                   userid: userid,
                                                 ).toJson()));
                                             showNotice(
                                                 "Lấy thông tin đăng nhập thành công!",
                                                 context);
-                                            print(
-                                                "Lấy thông tin đăng nhập thành công!");
+                                            // print("Lấy thông tin đăng nhập thành công!");
                                             Navigator.of(context).pop();
                                             Navigator.push(
                                               context,
@@ -430,6 +448,64 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             const Text("   "),
+                            // Container(
+                            //   width: 160,
+                            //   height: 45,
+                            //   child: OutlinedButton(
+                            //     onPressed: () {
+                            //       // Respond to button press
+                            //       (_account.text.isEmpty ||
+                            //               _password.text.isEmpty)
+                            //           ? _validate = true
+                            //           : _validate = false;
+                            //       if (_validate == true) {
+                            //         _showCupertinoDialog(
+                            //             "Lỗi",
+                            //             "Bạn chưa nhập Tài khoản hoặc mật khẩu!!",
+                            //             context);
+                            //       } else {
+                            //         setState(() {
+                            //           _futureLogin = loginOffline(
+                            //               client,
+                            //               _account.text,
+                            //               _password.text,
+                            //               tenantid,
+                            //               context);
+                            //
+                            //           _futureLogin.then((value) {
+                            //             if (value.result != null) {
+                            //               bool status = value.result!.status;
+                            //               if (status) {
+                            //                 isLoggedIn = true;
+                            //                 isLoggedInOffline = true;
+                            //                 token = value.result!.token;
+                            //                 username = value.result!.username;
+                            //                 userid = value.result!.userid;
+                            //                 Navigator.of(context).pop();
+                            //                 Navigator.push(
+                            //                   context,
+                            //                   MaterialPageRoute(
+                            //                       builder: (context) =>
+                            //                           MyDashBoard(
+                            //                             title: "Dashboard ",
+                            //                             isLoggedIn: isLoggedIn,
+                            //                             isLoggedInOffline:
+                            //                                 isLoggedInOffline,
+                            //                             token: token,
+                            //                             username: username,
+                            //                             userid: userid,
+                            //                           )),
+                            //                   // MaterialPageRoute(builder: (context) => MyApp()),
+                            //                 );
+                            //               }
+                            //             }
+                            //           });
+                            //         });
+                            //       }
+                            //     },
+                            //     child: const Text('Đăng nhập'),
+                            //   ),
+                            // )
                             Container(
                               width: 160,
                               height: 45,
@@ -437,18 +513,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   // Respond to button press
                                   (_account.text.isEmpty ||
-                                          _password.text.isEmpty)
+                                      _password.text.isEmpty)
                                       ? _validate = true
                                       : _validate = false;
                                   if (_validate == true) {
                                     _showCupertinoDialog(
                                         "Lỗi",
-                                        "Bạn chưa nhập Tài khoản hoặc mật khẩu!",
+                                        "Bạn chưa nhập Tài khoản hoặc mật khẩu!!",
                                         context);
                                   } else {
                                     setState(() {
-                                      _futureLogin = loginOffline(client,
-                                          _account.text, _password.text, context);
+                                      _futureLogin = loginOffline(
+                                          client,
+                                          _account.text,
+                                          _password.text,
+                                          tenantid,
+                                          context);
 
                                       _futureLogin.then((value) {
                                         if (value.result != null) {
@@ -468,7 +548,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         title: "Dashboard ",
                                                         isLoggedIn: isLoggedIn,
                                                         isLoggedInOffline:
-                                                            isLoggedInOffline,
+                                                        isLoggedInOffline,
                                                         token: token,
                                                         username: username,
                                                         userid: userid,
@@ -483,7 +563,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 },
                                 child: const Text('Đăng nhập'),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -541,20 +621,14 @@ class _MyDashBoardState extends State<MyDashBoard> {
                   Navigator.of(context).pop();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const TabBarScr()),
+                    MaterialPageRoute(builder: (context) => const TabBarScr()),
                   );
                 },
                 child: RichText(
                     text: const TextSpan(
                   children: [
                     TextSpan(
-                      text: "Thoát ",
-                      style: TextStyle(
-                        color: Colors.black
-                      )
-                    ),
+                        text: "Thoát ", style: TextStyle(color: Colors.black)),
                     WidgetSpan(
                       child: Icon(Icons.logout, size: 14),
                     ),
@@ -595,6 +669,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
                             isLoggedInOffline: isLoggedInOffline,
                             username: username,
                             userid: userid,
+                            tenantid: 2,
                           ),
                           SelectAction(
                             name: "Thu tiền",
@@ -605,6 +680,8 @@ class _MyDashBoardState extends State<MyDashBoard> {
                             isLoggedInOffline: isLoggedInOffline,
                             username: username,
                             userid: userid,
+                            tenantid: 2,
+
                           ),
                           SelectAction(
                             name: "Tổng hợp thu tiền",
@@ -615,6 +692,8 @@ class _MyDashBoardState extends State<MyDashBoard> {
                             isLoggedInOffline: isLoggedInOffline,
                             username: username,
                             userid: userid,
+                            tenantid: 2,
+
                           )
                         ],
                       )),
@@ -639,7 +718,10 @@ class SelectAction extends StatelessWidget {
       required this.isLoggedIn,
       required this.isLoggedInOffline,
       required this.username,
-      required this.userid});
+      required this.userid,
+      required this.tenantid,
+      });
+
   final String name;
   final String action;
   final IconData icon;
@@ -648,6 +730,7 @@ class SelectAction extends StatelessWidget {
   final bool isLoggedInOffline;
   final String username;
   final int userid;
+  final int tenantid;
 
   @override
   Widget build(BuildContext context) {
@@ -667,6 +750,7 @@ class SelectAction extends StatelessWidget {
                           token: token,
                           username: username,
                           userid: userid,
+                      tenantid: tenantid,
                         )),
                 // MaterialPageRoute(builder: (context) => MyApp()),
               );
@@ -681,7 +765,6 @@ class SelectAction extends StatelessWidget {
                           token: this.token,
                           username: this.username,
                           userid: this.userid,
-
                         )),
                 // MaterialPageRoute(builder: (context) => MyApp()),
               );

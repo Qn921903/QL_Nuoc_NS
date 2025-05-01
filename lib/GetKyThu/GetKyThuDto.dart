@@ -13,30 +13,32 @@ class GetBaoCaoThuTheoSoResultDto {
   final int tongKhachHang;
   final List<SoThanhToanForNhanVienKhongCanSoThanhToanDto> data;
 
-  GetBaoCaoThuTheoSoResultDto({required this.status, required this.message, required this.data, required this.tongTien, required this.tongKhachHang});
+  GetBaoCaoThuTheoSoResultDto(
+      {required this.status,
+      required this.message,
+      required this.data,
+      required this.tongTien,
+      required this.tongKhachHang});
 
   factory GetBaoCaoThuTheoSoResultDto.fromJson(Map<String, dynamic> jsons) {
     var streetsFromJson = jsons['result']['data'];
     List<SoThanhToanForNhanVienKhongCanSoThanhToanDto> posts = [];
     for (var Variable in streetsFromJson) {
       posts.add(new SoThanhToanForNhanVienKhongCanSoThanhToanDto(
-          tenSo: Variable['tenSo'],
-          soKhachHangDaThu: Variable['soKhachHangDaThu'],
-          tongSoKhachHang: Variable['tongSoKhachHang'],
-          soTienDaThu: Variable['soTienDaThu'],
-          tongSoTien: Variable['tongSoTien'],
-
+        tenSo: Variable['tenSo'],
+        soKhachHangDaThu: Variable['soKhachHangDaThu'],
+        tongSoKhachHang: Variable['tongSoKhachHang'],
+        soTienDaThu: Variable['soTienDaThu'],
+        tongSoTien: Variable['tongSoTien'],
       ));
     }
-
 
     return GetBaoCaoThuTheoSoResultDto(
         status: jsons['result']['status'],
         message: jsons['result']['message'],
         tongTien: int.parse(jsons['result']['tongTien'].toString()),
         tongKhachHang: int.parse(jsons['result']['tongKhachHang'].toString()),
-        data: posts
-    );
+        data: posts);
   }
 }
 
@@ -45,7 +47,8 @@ class GetKyThuResultDto {
   final String message;
   final List<GetKyThuDataDto> data;
 
-  GetKyThuResultDto({required this.status, required this.message, required this.data});
+  GetKyThuResultDto(
+      {required this.status, required this.message, required this.data});
 
   factory GetKyThuResultDto.fromJson(Map<String, dynamic> jsons) {
     var streetsFromJson = jsons['result']['data'];
@@ -55,26 +58,26 @@ class GetKyThuResultDto {
           displayText: Variable['displayText'], id: Variable['id']));
     }
 
-
     return GetKyThuResultDto(
         status: jsons['result']['status'],
         message: jsons['result']['message'],
-        data: posts
-    );
-  }
-}
-class GetCommonResultDto {
-  final bool status;
-  final String message;
-  GetCommonResultDto({required this.status, required this.message});
-  factory GetCommonResultDto.fromJson(Map<String, dynamic> jsons) {
-    return GetCommonResultDto(
-        status: jsons['result']['status'],
-        message: jsons['result']['message'],
-    );
+        data: posts);
   }
 }
 
+class GetCommonResultDto {
+  final bool status;
+  final String message;
+
+  GetCommonResultDto({required this.status, required this.message});
+
+  factory GetCommonResultDto.fromJson(Map<String, dynamic> jsons) {
+    return GetCommonResultDto(
+      status: jsons['result']['status'],
+      message: jsons['result']['message'],
+    );
+  }
+}
 
 class GetKyThuDataDto {
   final String displayText;
@@ -96,6 +99,7 @@ class SoThanhToanForNhanVienKhongCanSoThanhToanDto {
   final int tongSoKhachHang;
   final int soTienDaThu;
   final int tongSoTien;
+
   SoThanhToanForNhanVienKhongCanSoThanhToanDto({
     required this.tenSo,
     required this.soKhachHangDaThu,
@@ -104,7 +108,8 @@ class SoThanhToanForNhanVienKhongCanSoThanhToanDto {
     required this.tongSoTien,
   });
 
-  factory SoThanhToanForNhanVienKhongCanSoThanhToanDto.fromJson(Map<String, dynamic> json) {
+  factory SoThanhToanForNhanVienKhongCanSoThanhToanDto.fromJson(
+      Map<String, dynamic> json) {
     return SoThanhToanForNhanVienKhongCanSoThanhToanDto(
       tenSo: json['tenSo'],
       soKhachHangDaThu: json['soKhachHangDaThu'],
@@ -313,9 +318,6 @@ class SoThanhToanForNhanVienKhongCanSoThanhToanDto {
 //       };
 // }
 
-
-
-
 class GhiChiSoDataDto {
   int chiSoCu;
   int chiSoMoi;
@@ -350,27 +352,28 @@ class GhiChiSoDataDto {
   factory GhiChiSoDataDto.fromJson(Map<String, dynamic> json) {
     return GhiChiSoDataDto(
       // chiSoCu: int.tryParse(json['chiSoCu'].toString()) ,
-        chiSoCu: int.parse(json['chiSoCu'].toString()),
+      chiSoCu: int.parse(json['chiSoCu'].toString()),
       chiSoMoi: int.parse(json['chiSoMoi'].toString()),
       // chiSoMoi: int.tryParse(json['chiSoMoi'].toString()) ?? 0,
-      toaDoX: (json['toaDoX'] == null) ? 0.0 : double.tryParse(json['toaDoX'].toString()) ?? 0.0,
-      toaDoY: (json['toaDoY'] == null) ? 0.0 : double.tryParse(json['toaDoY'].toString()) ?? 0.0,
+      toaDoX: (json['toaDoX'] == null)
+          ? 0.0
+          : double.tryParse(json['toaDoX'].toString()) ?? 0.0,
+      toaDoY: (json['toaDoY'] == null)
+          ? 0.0
+          : double.tryParse(json['toaDoY'].toString()) ?? 0.0,
       thoiGianGhiDau: json['thoiGianGhiDau'] ?? '',
       thoiGianGhiCuoi: json['thoiGianGhiCuoi'] ?? '',
       dongHoId: int.tryParse(json['dongHoId'].toString()) ?? 0,
       soGhiChiSoId: int.tryParse(json['soGhiChiSoId'].toString()) ?? 0,
       truyThu: int.tryParse(json['truyThu'].toString()) ?? 0,
       ghiChu: json['ghiChu'] ?? '',
-      image: json['image']?.toString() ?? '',
+      image: json['image'].toString() ?? '',
       tongSuDung: int.tryParse(json['tongSuDung'].toString()) ?? 0,
       id: int.tryParse(json['id'].toString()) ?? 0,
     );
   }
 
-
-  Map<String, dynamic> toJson() =>
-      {
-
+  Map<String, dynamic> toJson() => {
         'chiSoCu': chiSoCu,
         'chiSoMoi': chiSoMoi,
         'toaDoX': toaDoX,
@@ -384,9 +387,7 @@ class GhiChiSoDataDto {
         'image': image,
         'tongSuDung': tongSuDung,
         'id': id,
-
       };
-
 }
 
 class HopdongDonghoKhoDongHoDto {
@@ -423,10 +424,7 @@ class HopdongDonghoKhoDongHoDto {
     );
   }
 
-
-  Map<String, dynamic> toJson() =>
-      {
-
+  Map<String, dynamic> toJson() => {
         'tenKhachHang': tenKhachHang,
         'diaChi': diaChi,
         'sdt': sdt,
@@ -435,8 +433,6 @@ class HopdongDonghoKhoDongHoDto {
         'dongHoId': dongHoId,
         'heSoTieuThu': heSoTieuThu,
         'id': id,
-
-
       };
 
 //   factory HopdongDonghoKhoDongHoDto.fromJson(Map<String, dynamic> json) {
@@ -496,29 +492,34 @@ class GetGhiChiSoDataDto {
       kinhDo: json['kinhDo'] ?? '',
       viDo: json['viDo'] ?? '',
       distance: double.tryParse(json['distance'].toString()) ?? 0.0,
-      hopdongDonghoKhoDongHoDto: HopdongDonghoKhoDongHoDto.fromJson(json['hopdongDonghoKhoDongHoDto'] ?? {}),
+      hopdongDonghoKhoDongHoDto: HopdongDonghoKhoDongHoDto.fromJson(
+          json['hopdongDonghoKhoDongHoDto'] ?? {}),
       stt: int.tryParse(json['stt'].toString()) ?? 0,
-      chiSoCuThangTruoc: int.tryParse(json['chiSoCuThangTruoc'].toString()) ?? 0,
-      chiSoMoiThangTruoc: int.tryParse(json['chiSoMoiThangTruoc'].toString()) ?? 0,
-      tongSuDungThangTruoc: int.tryParse(json['tongSuDungThangTruoc'].toString()) ?? 0,
-      chiSoCuThangTruocNua: int.tryParse(json['chiSoCuThangTruocNua'].toString()) ?? 0,
-      chiSoMoiThangTruocNua: int.tryParse(json['chiSoMoiThangTruocNua'].toString()) ?? 0,
-      tongSuDungThangTruocNua: int.tryParse(json['tongSuDungThangTruocNua'].toString()) ?? 0,
+      chiSoCuThangTruoc:
+          int.tryParse(json['chiSoCuThangTruoc'].toString()) ?? 0,
+      chiSoMoiThangTruoc:
+          int.tryParse(json['chiSoMoiThangTruoc'].toString()) ?? 0,
+      tongSuDungThangTruoc:
+          int.tryParse(json['tongSuDungThangTruoc'].toString()) ?? 0,
+      chiSoCuThangTruocNua:
+          int.tryParse(json['chiSoCuThangTruocNua'].toString()) ?? 0,
+      chiSoMoiThangTruocNua:
+          int.tryParse(json['chiSoMoiThangTruocNua'].toString()) ?? 0,
+      tongSuDungThangTruocNua:
+          int.tryParse(json['tongSuDungThangTruocNua'].toString()) ?? 0,
       isLapSTT: (json['isLapSTT'].toString() == 'true'),
     );
   }
 
-
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'ghiChiSo': jsonEncode(ghiChiSo.toJson()),
         'dongHoDiaChi': dongHoDiaChi,
         'soGhiChiSoTenSo': soGhiChiSoTenSo,
         'kinhDo': kinhDo,
         'viDo': viDo,
         'distance': distance,
-        'hopdongDonghoKhoDongHoDto': jsonEncode(
-            hopdongDonghoKhoDongHoDto.toJson()),
+        'hopdongDonghoKhoDongHoDto':
+            jsonEncode(hopdongDonghoKhoDongHoDto.toJson()),
         'stt': stt,
         'chiSoCuThangTruoc': chiSoCuThangTruoc,
         'chiSoMoiThangTruoc': chiSoMoiThangTruoc,
@@ -530,14 +531,13 @@ class GetGhiChiSoDataDto {
       };
 }
 
-
-
 class GetGhiChiSoDataResultDto {
   bool status;
   String message;
   List<GetGhiChiSoDataDto> data;
 
-  GetGhiChiSoDataResultDto({required this.status, required this.message, required this.data});
+  GetGhiChiSoDataResultDto(
+      {required this.status, required this.message, required this.data});
 
   factory GetGhiChiSoDataResultDto.fromJson(Map<String, dynamic> jsons) {
     var streetsFromJson = jsons['result']['data'];
@@ -553,23 +553,27 @@ class GetGhiChiSoDataResultDto {
           kinhDo: Variable['kinhDo'],
           soGhiChiSoTenSo: Variable['soGhiChiSoTenSo'],
           stt: Variable['stt'],
-          chiSoCuThangTruoc: int.parse(Variable['chiSoCuThangTruoc'].toString()),
-          chiSoMoiThangTruoc: int.parse(Variable['chiSoMoiThangTruoc'].toString()),
-          tongSuDungThangTruoc: int.parse(Variable['tongSuDungThangTruoc'].toString()),
-          chiSoCuThangTruocNua: int.parse(Variable['chiSoCuThangTruocNua'].toString()),
-          chiSoMoiThangTruocNua: int.parse(Variable['chiSoMoiThangTruocNua'].toString()),
-          tongSuDungThangTruocNua: int.parse(Variable['tongSuDungThangTruocNua'].toString()),
-          viDo: Variable['viDo']
-      ));
+          chiSoCuThangTruoc:
+              int.parse(Variable['chiSoCuThangTruoc'].toString()),
+          chiSoMoiThangTruoc:
+              int.parse(Variable['chiSoMoiThangTruoc'].toString()),
+          tongSuDungThangTruoc:
+              int.parse(Variable['tongSuDungThangTruoc'].toString()),
+          chiSoCuThangTruocNua:
+              int.parse(Variable['chiSoCuThangTruocNua'].toString()),
+          chiSoMoiThangTruocNua:
+              int.parse(Variable['chiSoMoiThangTruocNua'].toString()),
+          tongSuDungThangTruocNua:
+              int.parse(Variable['tongSuDungThangTruocNua'].toString()),
+          viDo: Variable['viDo']));
     }
     return GetGhiChiSoDataResultDto(
         status: jsons['result']['status'],
         message: jsons['result']['message'],
-        data: posts
-    );
+        data: posts);
   }
-  Map<String, dynamic> toJson() =>
-      {
+
+  Map<String, dynamic> toJson() => {
         'result': {
           'status': status,
           'message': message,
@@ -581,10 +585,14 @@ class GetGhiChiSoDataResultDto {
 class ReturnBackFromGhiChiSo {
   final bool status;
   final int chisomoi;
-  final String anh;
+  // final String anh;
   final String ghichu;
 
-  ReturnBackFromGhiChiSo({required this.status, required this.chisomoi,required this.anh,required this.ghichu});
+  ReturnBackFromGhiChiSo(
+      {required this.status,
+      required this.chisomoi,
+      // required this.anh,
+      required this.ghichu});
 }
 
 //sothanhtoan
@@ -596,14 +604,22 @@ class SoThanhToanDto {
   int nam;
   bool status;
   int soGhiChiSoId;
-  SoThanhToanDto({required this.tenSo,required this.thang,required this.nam,required this.status,required this.soGhiChiSoId,required this.id});
+
+  SoThanhToanDto(
+      {required this.tenSo,
+      required this.thang,
+      required this.nam,
+      required this.status,
+      required this.soGhiChiSoId,
+      required this.id});
+
   factory SoThanhToanDto.fromJson(Map<String, dynamic> json) {
     return SoThanhToanDto(
       tenSo: json['tenSo'].toString(),
       thang: int.parse(json['thang'].toString()),
       nam: int.parse(json['nam'].toString()),
       id: int.parse(json['id'].toString()),
-      status: (json['status'].toString()=='true'),
+      status: (json['status'].toString() == 'true'),
       soGhiChiSoId: int.parse(json['soGhiChiSoId'].toString()),
     );
   }
@@ -616,7 +632,15 @@ class GetSoThanhToanDataDto {
   int soKhachHangDaThu;
   int tongSoTien;
   int tongSoKhachHang;
-  GetSoThanhToanDataDto({required this.soGhiChiSoTenSo,required this.soThanhToan,required this.soTienDaThu,required this.soKhachHangDaThu,required this.tongSoKhachHang,required this.tongSoTien});
+
+  GetSoThanhToanDataDto(
+      {required this.soGhiChiSoTenSo,
+      required this.soThanhToan,
+      required this.soTienDaThu,
+      required this.soKhachHangDaThu,
+      required this.tongSoKhachHang,
+      required this.tongSoTien});
+
   factory GetSoThanhToanDataDto.fromJson(Map<String, dynamic> json) {
     return GetSoThanhToanDataDto(
       soThanhToan: SoThanhToanDto.fromJson(json['soThanhToan']),
@@ -634,36 +658,38 @@ class GetSoThanhToanDataResultDto {
   String message;
   List<GetSoThanhToanDataDto> data;
 
-  GetSoThanhToanDataResultDto({required this.status, required this.message, required this.data});
+  GetSoThanhToanDataResultDto(
+      {required this.status, required this.message, required this.data});
 
   factory GetSoThanhToanDataResultDto.fromJson(Map<String, dynamic> jsons) {
     var streetsFromJson = jsons['result']['data'];
     List<GetSoThanhToanDataDto> posts = [];
     for (var Variable in streetsFromJson) {
       posts.add(new GetSoThanhToanDataDto(
-          soKhachHangDaThu: Variable['soKhachHangDaThu'],
-          tongSoTien: Variable['tongSoTien'],
-          tongSoKhachHang: Variable['tongSoKhachHang'],
-          soTienDaThu: Variable['soTienDaThu'],
-          soGhiChiSoTenSo: Variable['soGhiChiSoTenSo'],
-          soThanhToan: SoThanhToanDto.fromJson(Variable['soThanhToan']),
+        soKhachHangDaThu: Variable['soKhachHangDaThu'],
+        tongSoTien: Variable['tongSoTien'],
+        tongSoKhachHang: Variable['tongSoKhachHang'],
+        soTienDaThu: Variable['soTienDaThu'],
+        soGhiChiSoTenSo: Variable['soGhiChiSoTenSo'],
+        soThanhToan: SoThanhToanDto.fromJson(Variable['soThanhToan']),
       ));
     }
     return GetSoThanhToanDataResultDto(
         status: jsons['result']['status'],
         message: jsons['result']['message'],
-        data: posts
-    );
+        data: posts);
   }
 }
+
 //chitietthanhtoan
-class ThanhTienChiTietDto{
+class ThanhTienChiTietDto {
   int mucDichSuDungId;
   String mucDichSuDungKyHieu;
   String mucDichSuDungMoTa;
   int soLuong;
   int donGia;
   int thanhTien;
+
   ThanhTienChiTietDto({
     required this.mucDichSuDungId,
     required this.mucDichSuDungKyHieu,
@@ -672,6 +698,7 @@ class ThanhTienChiTietDto{
     required this.donGia,
     required this.thanhTien,
   });
+
   factory ThanhTienChiTietDto.fromJson(Map<String, dynamic> json) {
     return ThanhTienChiTietDto(
       mucDichSuDungKyHieu: json['mucDichSuDungKyHieu'].toString(),
@@ -716,36 +743,36 @@ class ChiTietThanhToanDto {
   String soHoaDon;
   int sTT;
 
-  ChiTietThanhToanDto({
-    required this.chiSoCu,
-    required this.chiSoMoi,
-    required this.tongSuDung,
-    required this.truyThu,
-    required this.heSoTieuThu,
-    required this.tongThanhTien,
-    required this.vat,
-    required this.status,
-    required this.nguoiThuId,
-    required this.tenNguoiThu,
-    required this.ngayThu,
-    required this.tongThanhTienSauVat,
-    required this.ghiChu,
-    required this.messageStatus,
-    required this.isCreateInvoice,
-    required this.thuTu,
-    required this.paymentType,
-    required this.phiDuyTriDauNoi,
-    required this.phiBaoVeMoiTruong,
-    required this.id,
-    required this.thanhTienChiTiet,
-    required this.dongHoId,
-    required this.hopDongId,
-    required this.soThanhToanId,
-    required this.lichSuThu,
-    required this.maBiMat,
-    required this.soHoaDon,
-    required this.sTT
-  });
+  ChiTietThanhToanDto(
+      {required this.chiSoCu,
+      required this.chiSoMoi,
+      required this.tongSuDung,
+      required this.truyThu,
+      required this.heSoTieuThu,
+      required this.tongThanhTien,
+      required this.vat,
+      required this.status,
+      required this.nguoiThuId,
+      required this.tenNguoiThu,
+      required this.ngayThu,
+      required this.tongThanhTienSauVat,
+      required this.ghiChu,
+      required this.messageStatus,
+      required this.isCreateInvoice,
+      required this.thuTu,
+      required this.paymentType,
+      required this.phiDuyTriDauNoi,
+      required this.phiBaoVeMoiTruong,
+      required this.id,
+      required this.thanhTienChiTiet,
+      required this.dongHoId,
+      required this.hopDongId,
+      required this.soThanhToanId,
+      required this.lichSuThu,
+      required this.maBiMat,
+      required this.soHoaDon,
+      required this.sTT});
+
   factory ChiTietThanhToanDto.fromJson(Map<String, dynamic> json) {
     var streetsFromJson = json['thanhTienChiTiet'];
     List<ThanhTienChiTietDto> posts = [];
@@ -765,7 +792,10 @@ class ChiTietThanhToanDto {
       lichSuThu: json['lichSuThu'].toString(),
       maBiMat: json['maBiMat'].toString(),
       soHoaDon: json['soHoaDon'].toString(),
-      ngayThu: ((json['ngayThu']!=null)? new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(json['ngayThu'].toString()):now_date),
+      ngayThu: ((json['ngayThu'] != null)
+          ? new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+              .parse(json['ngayThu'].toString())
+          : now_date),
       chiSoCu: int.parse(json['chiSoCu'].toString()),
       chiSoMoi: int.parse(json['chiSoMoi'].toString()),
       tongSuDung: int.parse(json['tongSuDung'].toString()),
@@ -777,7 +807,7 @@ class ChiTietThanhToanDto {
       nguoiThuId: int.parse(json['nguoiThuId'].toString()),
       tongThanhTienSauVat: int.parse(json['tongThanhTienSauVat'].toString()),
       messageStatus: int.parse(json['messageStatus'].toString()),
-      isCreateInvoice: json['isCreateInvoice'].toString()=="true",
+      isCreateInvoice: json['isCreateInvoice'].toString() == "true",
       thuTu: int.parse(json['thuTu'].toString()),
       paymentType: int.parse(json['paymentType'].toString()),
       phiDuyTriDauNoi: int.parse(json['phiDuyTriDauNoi'].toString()),
@@ -791,6 +821,7 @@ class ChiTietThanhToanDto {
     );
   }
 }
+
 class HopdongDonghoKhoDongHoThanhToanDto {
   int id;
   String sdt;
@@ -798,7 +829,6 @@ class HopdongDonghoKhoDongHoThanhToanDto {
   String diaChi;
   String maHopDong;
   String tenKhachHang;
-
 
   HopdongDonghoKhoDongHoThanhToanDto({
     required this.id,
@@ -808,15 +838,16 @@ class HopdongDonghoKhoDongHoThanhToanDto {
     required this.maHopDong,
     required this.tenKhachHang,
   });
-  factory HopdongDonghoKhoDongHoThanhToanDto.fromJson(Map<String, dynamic> json) {
 
+  factory HopdongDonghoKhoDongHoThanhToanDto.fromJson(
+      Map<String, dynamic> json) {
     return HopdongDonghoKhoDongHoThanhToanDto(
-     id: int.parse(json['id'].toString()),
-     sdt: json['sdt'].toString(),
-     serial: json['serial'].toString(),
-     diaChi: json['diaChi'].toString(),
-     maHopDong: json['maHopDong'].toString(),
-     tenKhachHang: json['tenKhachHang'].toString(),
+      id: int.parse(json['id'].toString()),
+      sdt: json['sdt'].toString(),
+      serial: json['serial'].toString(),
+      diaChi: json['diaChi'].toString(),
+      maHopDong: json['maHopDong'].toString(),
+      tenKhachHang: json['tenKhachHang'].toString(),
     );
   }
 }
@@ -829,11 +860,21 @@ class GetChiTietThanhToanDataDto {
   String kinhDo;
   String viDo;
   String soThanhToanTenSo;
-  GetChiTietThanhToanDataDto({required this.chiTietThanhToan,required this.dongHoDiaChi,required this.daukycuoiky,required this.kinhDo,required this.viDo,required this.soThanhToanTenSo,required this.hopdongDonghoKhoDongHoDto});
+
+  GetChiTietThanhToanDataDto(
+      {required this.chiTietThanhToan,
+      required this.dongHoDiaChi,
+      required this.daukycuoiky,
+      required this.kinhDo,
+      required this.viDo,
+      required this.soThanhToanTenSo,
+      required this.hopdongDonghoKhoDongHoDto});
+
   factory GetChiTietThanhToanDataDto.fromJson(Map<String, dynamic> json) {
     return GetChiTietThanhToanDataDto(
       chiTietThanhToan: ChiTietThanhToanDto.fromJson(json['chiTietThanhToan']),
-      hopdongDonghoKhoDongHoDto: HopdongDonghoKhoDongHoDto.fromJson(json['hopdongDonghoKhoDongHoDto']),
+      hopdongDonghoKhoDongHoDto:
+          HopdongDonghoKhoDongHoDto.fromJson(json['hopdongDonghoKhoDongHoDto']),
       dongHoDiaChi: json['dongHoDiaChi'],
       daukycuoiky: json['daukycuoiky'],
       kinhDo: json['kinhDo'],
@@ -848,9 +889,11 @@ class GetChiTietThanhToanDataResultDto {
   String message;
   List<GetChiTietThanhToanDataDto> data;
 
-  GetChiTietThanhToanDataResultDto({required this.status, required this.message, required this.data});
+  GetChiTietThanhToanDataResultDto(
+      {required this.status, required this.message, required this.data});
 
-  factory GetChiTietThanhToanDataResultDto.fromJson(Map<String, dynamic> jsons) {
+  factory GetChiTietThanhToanDataResultDto.fromJson(
+      Map<String, dynamic> jsons) {
     var streetsFromJson = jsons['result']['data'];
     List<GetChiTietThanhToanDataDto> posts = [];
     for (var Variable in streetsFromJson) {
@@ -860,14 +903,15 @@ class GetChiTietThanhToanDataResultDto {
         kinhDo: Variable['kinhDo'],
         viDo: Variable['viDo'],
         soThanhToanTenSo: Variable['soThanhToanTenSo'],
-        chiTietThanhToan: ChiTietThanhToanDto.fromJson(Variable['chiTietThanhToan']),
-        hopdongDonghoKhoDongHoDto: HopdongDonghoKhoDongHoDto.fromJson(Variable['hopdongDonghoKhoDongHoDto']),
+        chiTietThanhToan:
+            ChiTietThanhToanDto.fromJson(Variable['chiTietThanhToan']),
+        hopdongDonghoKhoDongHoDto: HopdongDonghoKhoDongHoDto.fromJson(
+            Variable['hopdongDonghoKhoDongHoDto']),
       ));
     }
     return GetChiTietThanhToanDataResultDto(
         status: jsons['result']['status'],
         message: jsons['result']['message'],
-        data: posts
-    );
+        data: posts);
   }
 }

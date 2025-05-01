@@ -56,6 +56,7 @@ Future<GetBaoCaoThuTheoSoResultDto> getDataTheoSo(http.Client client,
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
@@ -74,11 +75,13 @@ Future<GetBaoCaoThuTheoSoResultDto> getDataTheoSo(http.Client client,
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: jsonEncode(<String, String>{
+
             'id': loginRequestResult.result!.userid.toString(),
             'token': loginRequestResult.result!.token,
             'tuNgay': tuNgay,
             'denNgay': denNgay,
-            'type': type
+            'type': type,
+            'tenantId': data.tenantid.toString(),
           }),
         );
         hideOpenDialog(context);
