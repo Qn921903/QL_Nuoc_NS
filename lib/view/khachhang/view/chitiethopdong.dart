@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../view_model/chitiet_tracuu_viewmodel.dart';
-
+import '../../../drawer/tabbar_view.dart';
+import 'tracuu_view.dart';
 class DetailHopDong extends StatefulWidget {
   final dynamic item;
 
@@ -31,6 +32,9 @@ class _DetailHopDongState extends State<DetailHopDong> {
     // Hiển thị thông báo đã sao chép thành công
     // print('Đã sao chép: $text');
   }
+  void handleOut(){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>TabBarScr()));
+  }
 
   @override
   void initState() {
@@ -48,7 +52,7 @@ class _DetailHopDongState extends State<DetailHopDong> {
       builder: (context, chiTietViewModel, child) {
         if (chiTietViewModel.isLoading) {
           return Scaffold(
-            appBar: AppBar(title: Text('Chi tiết hóa đơn')),
+            appBar: AppBar(title: const Text('Chi tiết hóa đơn')),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
@@ -56,7 +60,7 @@ class _DetailHopDongState extends State<DetailHopDong> {
         final itemData = chiTietViewModel.chiTietData;
         if (itemData == null) {
           return Scaffold(
-            appBar: AppBar(title: Text('Chi tiết hóa đơn')),
+            appBar: AppBar(title: const Text('Chi tiết hóa đơn')),
             body: const Center(child: Text('Không có dữ liệu')),
           );
         }
@@ -108,7 +112,7 @@ class _DetailHopDongState extends State<DetailHopDong> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                     // Card Thông tin khách hàng
                      Card(
                     elevation: 4,
@@ -151,62 +155,89 @@ class _DetailHopDongState extends State<DetailHopDong> {
                       ),
                     ),
                   ),
-                   SizedBox(height: 20),
+                   const SizedBox(height: 20),
                   // Tiêu đề Thay đổi thông tin
-                  const Text(
-                    'Thay đổi thông tin',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue,
+                  // const Text(
+                  //   'Thay đổi thông tin',
+                  //   style: TextStyle(
+                  //     fontSize: 20,
+                  //     fontWeight: FontWeight.w600,
+                  //     color: Colors.blue,
+                  //   ),
+                  // ),
+                  //  const SizedBox(height: 10),
+                  // TextField để thay đổi thông tin
+              // Padding(
+              //   padding: const EdgeInsets.all(10.0),
+              //   child: Container(
+              //     width: double.infinity,
+              //     height: 150,
+              //     decoration: BoxDecoration(
+              //       border: Border.all(color: Colors.blue, width: 2),
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     padding: const EdgeInsets.all(5),
+              //     child: Column(
+              //       children: [
+              //         Text('Liên hệ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400), textAlign: TextAlign.center,),
+              //
+              //         Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Text(
+              //               'Số điện thoại: $phoneNumber',
+              //               style: TextStyle(fontSize: 16),
+              //             ),
+              //             IconButton(
+              //               icon: Icon(Icons.copy),
+              //               onPressed: () => _copyToClipboard(phoneNumber),
+              //             ),
+              //           ],
+              //         ),
+              //         SizedBox(height: 8),
+              //         Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Text(
+              //               'Email: $email',
+              //               style: TextStyle(fontSize: 16),
+              //             ),
+              //             IconButton(
+              //               icon: Icon(Icons.copy),
+              //               onPressed: () => _copyToClipboard(email),
+              //             ),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   )),
+                  Container(
+                    width: 130,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent, width: 1),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.redAccent
+                    ),
+                    child: TextButton(
+                      onPressed: handleOut,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.logout_outlined,
+                            // size: 28,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 10,),
+                          Text('Thoát', style: TextStyle(
+                            fontSize: 21,
+                            color: Colors.white
+                          ),),
+                        ],
+                      ),
                     ),
                   ),
-                   const SizedBox(height: 10),
-                  // TextField để thay đổi thông tin
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      Text('Liên hệ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400), textAlign: TextAlign.center,),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Số điện thoại: $phoneNumber',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.copy),
-                            onPressed: () => _copyToClipboard(phoneNumber),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Email: $email',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.copy),
-                            onPressed: () => _copyToClipboard(email),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
                   const SizedBox(height: 20),
                   ],
               ),

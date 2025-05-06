@@ -1,0 +1,25 @@
+flutter_native_splash:
+  android: true
+  ios: true
+
+#  color: "#000000"
+
+#  image: "assets/image/logo_resized_200x200.png"
+#  image: "assets/image/logo_app_nuoc-removebg-preview.png"
+#  image: "assets/image/logo_app_nuoc-removebg-preview.png"
+  background_image: "assets/image/background.png"
+#  color: "#B0E0E6"
+#  android_gravity: center
+#  ios_content_mode: center
+  android_12:
+#    background_image: "assets/image/background.png"
+
+    image: "assets/image/logo_3.png"
+    branding: "assets/image/branding_2.png"
+#    image: "assets/image/logo_app_nuoc-removebg-preview.png"
+#    image: "assets/image/logo_resized_200x200.png"
+#    icon_background_color: 	"#87CEEB"
+    background_image: "assets/image/background.png"
+#    color: "#87CEEB"
+#    image_dark: assets/image/logo_app_nuoc-removebg-preview.png
+#    icon_background_color_dark: "#121212"

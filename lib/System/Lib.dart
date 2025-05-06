@@ -116,24 +116,45 @@ Future delFile(String $key) async {
 }
 
 void showLoadingIndicator(String text, BuildContext context) {
+  // showDialog(
+  //   context: context,
+  //   barrierDismissible: false,
+  //   builder: (BuildContext context) {
+  //     return PopScope(
+  //       canPop: false, // Điều khiển việc cho phép thoát hay không
+  //       onPopInvoked: (didPop) {
+  //         if (!didPop) {
+  //           // Logic xử lý khi người dùng nhấn nút quay lại
+  //         }
+  //       },
+  //       child: Scaffold(
+  //         appBar: AppBar(title: Text("Đang tải")),
+  //         body: Center(child: CircularProgressIndicator()),
+  //       ),
+  //     );
+  //   },
+  // );
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (BuildContext context) {
+    builder: (context) {
       return PopScope(
-        canPop: false, // Điều khiển việc cho phép thoát hay không
-        onPopInvoked: (didPop) {
-          if (!didPop) {
-            // Logic xử lý khi người dùng nhấn nút quay lại
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(title: Text("Trang chủ")),
-          body: Center(child: CircularProgressIndicator()),
+        canPop: false,
+        child: AlertDialog(
+          title: Text("Đang tải..."),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 20),
+              // Expanded(child: Text(text)),
+            ],
+          ),
         ),
       );
     },
   );
+
 }
 
 void hideOpenDialog(BuildContext context) {

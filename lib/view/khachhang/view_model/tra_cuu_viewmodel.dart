@@ -12,6 +12,7 @@ class HoaDonViewModel extends ChangeNotifier {
     required int nam,
     required String maHopDong,
     required String tenKhachHang,
+    required String mst,
   }) async {
     isLoading = true;
     notifyListeners();
@@ -22,6 +23,7 @@ class HoaDonViewModel extends ChangeNotifier {
       nam: nam,
       maHopDong: maHopDong,
       tenKhachHang: tenKhachHang,
+      mst: mst,
     );
 
     isLoading = false;

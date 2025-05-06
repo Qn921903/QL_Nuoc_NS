@@ -545,7 +545,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       MyDashBoard(
-                                                        title: "Dashboard ",
+                                                        title: "Quản Lý",
                                                         isLoggedIn: isLoggedIn,
                                                         isLoggedInOffline:
                                                         isLoggedInOffline,
@@ -652,13 +652,15 @@ class _MyDashBoardState extends State<MyDashBoard> {
                       padding: const EdgeInsets.all(8.0),
                       child: (Column(
                         children: <Widget>[
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Máy chủ:" + $GetServer),
-                          ),
+                          // const Padding(
+                          //   padding: EdgeInsets.all(8.0),
+                          //   child: Text("Máy chủ:" + $GetServer),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text("Xin chào " + username),
+                            child: Text("Xin chào " + username, style: TextStyle(
+                              fontSize: 18,
+                            ),),
                           ),
                           SelectAction(
                             name: "Ghi chỉ số",

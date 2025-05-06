@@ -696,7 +696,8 @@ class _GhiChiSoState extends State<GhiChiSo> {
                                 hint: const Text("Select item"),
                                 value: selectedKyThu,
                                 onChanged: _onSelectChanged,
-                                items: kythus),
+                                items: kythus
+                            ),
                           ),
                           Row(
                             children: [

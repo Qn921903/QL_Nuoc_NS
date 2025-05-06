@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.1.4
   saver_gallery: ^4.0.1
   permission_handler: ^12.0.0+1
+  flutter_native_splash: ^2.4.4
 #  data_table_2: ^2.5.16
 #  intl: ^0.20.2
 
@@ -72,10 +73,10 @@ flutter:
   uses-material-design: true
   assets:
     - ./assets/image/
-    - ./assets/image/logo1.png
+#    - ./assets/image/logo1.png
     - ./assets/image/noimg.jpg
     - ./assets/image/logo_app_nuoc_2.png
-    - ./assets/image/logo_app_nuoc-removebg-preview.png
+
 #    - ./assets/image/anhnen.png,
   #   - images/a_dot_ham.jpeg
   # To add assets to your application, add an assets section, like this:

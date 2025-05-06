@@ -862,7 +862,7 @@ class _ThucHienThuState extends State<ThucHienThu> {
                                                       context, 'ghichu');
                                                 }
                                               },
-                                              child: const Text("In thông báo")),
+                                              child: const Text("Trở lại")),
                                         ],
                                       )
                                     ],

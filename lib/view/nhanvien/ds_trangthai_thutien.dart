@@ -17,32 +17,32 @@ _showCupertinoDialog(String title, String content, BuildContext context) {
   showDialog(
       context: context,
       builder: (_) => CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Đóng!'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ));
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Đóng!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ));
 }
 
 class ListThanhToan extends StatefulWidget {
   ListThanhToan(
       {Key? key,
-        required this.title,
-        required this.isLoggedIn,
-        required this.isLoggedInOffline,
-        required this.token,
-        required this.username,
-        required this.userid,
-        required this.selectedKyThu,
-        required this.selectedKyThuName,
-        required this.thang,
-        required this.nam})
+      required this.title,
+      required this.isLoggedIn,
+      required this.isLoggedInOffline,
+      required this.token,
+      required this.username,
+      required this.userid,
+      required this.selectedKyThu,
+      required this.selectedKyThuName,
+      required this.thang,
+      required this.nam})
       : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -77,13 +77,13 @@ class ListThanhToan extends StatefulWidget {
 //   final int value;
 // }
 List<SelectAction> _selectActions = [];
+
 class _ListThanhToanState extends State<ListThanhToan> {
   var client = http.Client();
   bool sortStt = true;
   String _filter = "";
   int sortDaghi = 1; //1 all 2 chua ghi 3 da ghi
   late Future<GetChiTietThanhToanDataResultDto> _dataChiTietThanhToan;
-
 
   Future<GetChiTietThanhToanDataResultDto> getData(
       http.Client client,
@@ -94,13 +94,14 @@ class _ListThanhToanState extends State<ListThanhToan> {
     showLoadingIndicator("Tải file dữ liệu", context);
     final responseOffline = await readFile(account + "auth.data");
     final LoginOfflineData data =
-    LoginOfflineData.fromJson(json.decode(responseOffline));
+        LoginOfflineData.fromJson(json.decode(responseOffline));
     hideOpenDialog(context);
     if (responseOffline == "N/A") {
       return GetChiTietThanhToanDataResultDto(
           status: false,
           message:
-          'Không tải được file dữ liệu. Vui lòng đăng nhập online trước!', data: []);
+              'Không tải được file dữ liệu. Vui lòng đăng nhập online trước!',
+          data: []);
     } else {
       showLoadingIndicator("Đăng nhập vào hệ thống ...", context);
       final responseLogin = await client.post(
@@ -111,16 +112,17 @@ class _ListThanhToanState extends State<ListThanhToan> {
         body: jsonEncode(<String, String>{
           'accountName': account,
           'passWord': data.password,
-          'tenantId':data.tenantid.toString(),
+          'tenantId': data.tenantid.toString(),
         }),
       );
       hideOpenDialog(context);
       LoginRequestResult loginRequestResult =
-      LoginRequestResult.fromJson(jsonDecode(responseLogin.body));
+          LoginRequestResult.fromJson(jsonDecode(responseLogin.body));
       if (responseLogin.statusCode != 200) {
         return GetChiTietThanhToanDataResultDto(
             status: false,
-            message: "Tài khoản hoặc mật khẩu online đã thay đổi!", data: []);
+            message: "Tài khoản hoặc mật khẩu online đã thay đổi!",
+            data: []);
       } else {
         showLoadingIndicator("Lấy dữ liệu từ server ...", context);
         final response = await client.post(
@@ -143,7 +145,9 @@ class _ListThanhToanState extends State<ListThanhToan> {
               jsonDecode(response.body));
         } else {
           return GetChiTietThanhToanDataResultDto(
-              status: false, message: "Thông tin kết nối không chính xác!", data: []);
+              status: false,
+              message: "Thông tin kết nối không chính xác!",
+              data: []);
         }
       }
     }
@@ -168,9 +172,7 @@ class _ListThanhToanState extends State<ListThanhToan> {
                   ", " +
                   data.hopdongDonghoKhoDongHoDto.serial,
               action: "",
-              status: (data.chiTietThanhToan.status==1)
-                  ? true
-                  : false,
+              status: (data.chiTietThanhToan.status == 1) ? true : false,
               token: widget.token,
               isLoggedIn: widget.isLoggedIn,
               isLoggedInOffline: widget.isLoggedInOffline,
@@ -179,7 +181,8 @@ class _ListThanhToanState extends State<ListThanhToan> {
               address: data.dongHoDiaChi,
               thang: widget.thang,
               nam: widget.nam,
-              getChiTietThanhToanDataDto: data, id: 0,
+              getChiTietThanhToanDataDto: data,
+              id: 0,
             ));
           });
         }
@@ -251,7 +254,8 @@ class _ListThanhToanState extends State<ListThanhToan> {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Xin chào " + username,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             )),
                         Padding(
@@ -305,12 +309,49 @@ class _ListThanhToanState extends State<ListThanhToan> {
                                     child: Container(
                                       child: ListView.builder(
                                           physics:
-                                          const NeverScrollableScrollPhysics(),
+                                              const NeverScrollableScrollPhysics(),
                                           reverse: !sortStt,
                                           shrinkWrap: true,
                                           itemCount: _selectActions.length,
                                           itemBuilder: (context, index) {
-                                            return (_filter.trim() != "") ? ((_selectActions[index].name.toLowerCase().contains( _filter.toLowerCase()) || _selectActions[index] .address.toLowerCase().contains( _filter.toLowerCase())) ? (sortDaghi == 1) ? _selectActions[index] : ((sortDaghi == 2) ? ((_selectActions[ index] .status) ? Container() : _selectActions[ index]) : ((!_selectActions[ index] .status) ? Container() : _selectActions[ index])) : Container()) : (sortDaghi == 1) ? _selectActions[index] : ((sortDaghi == 2) ? ((_selectActions[ index] .status) ? Container() : _selectActions[ index]) : ((!_selectActions[ index] .status) ? Container() : _selectActions[ index]));
+                                            return (_filter.trim() != "")
+                                                ? ((_selectActions[index]
+                                                            .name
+                                                            .toLowerCase()
+                                                            .contains(_filter
+                                                                .toLowerCase()) ||
+                                                        _selectActions[index]
+                                                            .address
+                                                            .toLowerCase()
+                                                            .contains(_filter
+                                                                .toLowerCase()))
+                                                    ? (sortDaghi == 1)
+                                                        ? _selectActions[index]
+                                                        : ((sortDaghi == 2)
+                                                            ? ((_selectActions[index]
+                                                                    .status)
+                                                                ? Container()
+                                                                : _selectActions[
+                                                                    index])
+                                                            : ((!_selectActions[index]
+                                                                    .status)
+                                                                ? Container()
+                                                                : _selectActions[
+                                                                    index]))
+                                                    : Container())
+                                                : (sortDaghi == 1)
+                                                    ? _selectActions[index]
+                                                    : ((sortDaghi == 2)
+                                                        ? ((_selectActions[index]
+                                                                .status)
+                                                            ? Container()
+                                                            : _selectActions[
+                                                                index])
+                                                        : ((!_selectActions[index]
+                                                                .status)
+                                                            ? Container()
+                                                            : _selectActions[
+                                                                index]));
                                           }),
                                     ),
                                   )
@@ -343,8 +384,8 @@ class _ListThanhToanState extends State<ListThanhToan> {
               icon: (sortDaghi == 1)
                   ? const Icon(Icons.clear_all)
                   : ((sortDaghi == 2)
-                  ? const Icon(Icons.cancel_presentation)
-                  : const Icon(Icons.check_box)),
+                      ? const Icon(Icons.cancel_presentation)
+                      : const Icon(Icons.check_box)),
               color: Colors.blue,
               onPressed: () {
                 setState(() {
@@ -367,26 +408,28 @@ class _ListThanhToanState extends State<ListThanhToan> {
 class SelectAction extends StatefulWidget {
   SelectAction(
       {Key? key,
-        required this.name,
-        required this.address,
-        required this.id,
-        required this.action,
-        required this.token,
-        required this.isLoggedIn,
-        required this.username,
-        required this.isLoggedInOffline,
-        required this.getChiTietThanhToanDataDto,
-        required this.userid,
-        required this.thang,
-        required this.nam,
-        required this.status})
+      required this.name,
+      required this.address,
+      required this.id,
+      required this.action,
+      required this.token,
+      required this.isLoggedIn,
+      required this.username,
+      required this.isLoggedInOffline,
+      required this.getChiTietThanhToanDataDto,
+      required this.userid,
+      required this.thang,
+      required this.nam,
+      required this.status})
       : super(key: key) {
     // TODO: implement SelectAction
     // throw UnimplementedError();
   }
+
   final String name;
   final String address;
   final String action;
+
 // late  IconData icon;
 //  late Color color;
   final String token;
@@ -408,6 +451,7 @@ class _SelectActionState extends State<SelectAction> {
   late String name;
   late String address;
   late String action;
+
   // late IconData icon;
   late Color color;
   late String token;
@@ -473,8 +517,8 @@ class _SelectActionState extends State<SelectAction> {
     if (result.toString() != "ghichu" && result != null) {
       setState(() {
         status = result.status;
-        status=result.status;
-        _selectActions[_selectActions.indexOf(widget)].status=result.status;
+        status = result.status;
+        _selectActions[_selectActions.indexOf(widget)].status = result.status;
       });
     }
   }
@@ -510,7 +554,7 @@ class _SelectActionState extends State<SelectAction> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Align(
                                       alignment: Alignment.centerLeft,
@@ -620,8 +664,8 @@ class _SelectActionState extends State<SelectAction> {
                                                 text: "Tổng tiền: " +
                                                     f
                                                         .format(chiTietThanhToanDto
-                                                        .chiTietThanhToan
-                                                        .tongThanhTienSauVat)
+                                                            .chiTietThanhToan
+                                                            .tongThanhTienSauVat)
                                                         .toString(),
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -636,16 +680,18 @@ class _SelectActionState extends State<SelectAction> {
                                         alignment: Alignment.centerLeft,
                                         child: Container(
                                           padding: const EdgeInsets.all(2.0),
-                                          margin: const EdgeInsets.all(10) ,
+                                          margin: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             color: color,
                                             boxShadow: [
-                                              BoxShadow(color: color, spreadRadius: 7),
+                                              BoxShadow(
+                                                  color: color,
+                                                  spreadRadius: 7),
                                             ],
                                           ),
                                           child: RichText(
-
                                             text: TextSpan(
                                               children: [
                                                 WidgetSpan(
@@ -656,24 +702,26 @@ class _SelectActionState extends State<SelectAction> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: ((status) ? " Đã thu" : " Chưa thu"),
+                                                  text: ((status)
+                                                      ? " Đã thu"
+                                                      : " Chưa thu"),
                                                   style: const TextStyle(
-                                                    fontWeight: FontWeight.normal,
+                                                    fontWeight:
+                                                        FontWeight.normal,
                                                     fontSize: 14,
                                                     color: Colors.white,
                                                   ),
-
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        )
-                                    ),
+                                        )),
                                   ],
                                 )))
                       ]))),
         ));
   }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);

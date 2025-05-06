@@ -18,6 +18,7 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
 
   final TextEditingController tenKHController = TextEditingController();
   final TextEditingController maHDController = TextEditingController();
+  final TextEditingController mstController = TextEditingController();
 
   String formatCurrency(int amount) {
     final formatter = NumberFormat('#,###', 'vi_VN');
@@ -32,26 +33,113 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
 
     return Scaffold(
       body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Column(
-            children: [
-              _buildDropdowns(months, years),
-              const SizedBox(height: 10),
-              _buildSearchFields(),
-              const SizedBox(height: 12),
-              _buildSearchButton(viewModel),
-              const SizedBox(height: 20),
-              Expanded(
-                child: viewModel.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : viewModel.response != null
-                    ? _buildResultTable(viewModel)
-                    : const Center(child: Text("Không có dữ liệu.")),
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      //     child: Column(
+      //       children: [
+      //         Column(
+      //           children: [
+      //             _buildDropdowns(months, years),
+      //             const SizedBox(height: 10),
+      //             _buildSearchFields(),
+      //             const SizedBox(height: 12),
+      //             _buildSearchButton(viewModel),
+      //             const SizedBox(height: 20),
+      //           ],
+      //         ),
+      //
+      //
+      //         Expanded(
+      //           child: viewModel.isLoading
+      //               ? const Center(child: CircularProgressIndicator())
+      //               : viewModel.response != null
+      //                   ? (viewModel.response!.listData.isNotEmpty
+      //                       ? _buildResultTable(viewModel)
+      //                       : const Center(
+      //                           child: Text("Không có thông tin đang tìm.", style: TextStyle(
+      //                             fontSize: 22,
+      //                             fontWeight: FontWeight.bold
+      //                           ),)))
+      //                   // : const Center(child: Text("Không có dữ liệu.")),
+      //                   : SingleChildScrollView(
+      //                       child: Center(
+      //                         child: Column(
+      //                           children: [
+      //                             Image.asset(
+      //                               './assets/image/logo_app_nuoc-removebg-preview.png',
+      //                               width: 240,
+      //                               height: 240,
+      //                             ),
+      //                             const Text(
+      //                               'Nước Sạch Nam Sơn',
+      //                               style: TextStyle(
+      //                                   fontSize: 26, color: Colors.blueAccent),
+      //                             )
+      //                           ],
+      //                         ),
+      //                       ),
+      //                     ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          _buildDropdowns(months, years),
+                          const SizedBox(height: 10),
+                          _buildSearchFields(),
+                          const SizedBox(height: 12),
+                          _buildSearchButton(viewModel),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                              Expanded(
+                                child: viewModel.isLoading
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : viewModel.response != null
+                                        ? (viewModel.response!.listData.isNotEmpty
+                                            ? _buildResultTable(viewModel)
+                                            : const Center(
+                                                child: Text("Không có thông tin đang tìm.", style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold
+                                                ),)))
+                                        // : const Center(child: Text("Không có dữ liệu.")),
+                                        : SingleChildScrollView(
+                                            child: Center(
+                                              child: Column(
+                                                children: [
+                                                  Image.asset(
+                                                    './assets/image/logo_app_nuoc-removebg-preview.png',
+                                                    width: 240,
+                                                    height: 240,
+                                                  ),
+                                                  const Text(
+                                                    'Nước Sạch Nam Sơn',
+                                                    style: TextStyle(
+                                                        fontSize: 26, color: Colors.blueAccent),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),)
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
@@ -71,7 +159,8 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
             items: months.map((int month) {
               return DropdownMenuItem<int>(
                 value: month,
-                child: Text('Tháng $month', style: const TextStyle(fontSize: 16)),
+                child:
+                    Text('Tháng $month', style: const TextStyle(fontSize: 16)),
               );
             }).toList(),
             decoration: const InputDecoration(
@@ -108,24 +197,34 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
   }
 
   Widget _buildSearchFields() {
-    return Column(
-      children: [
-        TextField(
-          controller: tenKHController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Tên khách hàng',
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TextField(
+            controller: tenKHController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Tên khách hàng',
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: maHDController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Mã hợp đồng',
+          const SizedBox(height: 10),
+          TextField(
+            controller: maHDController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Mã hợp đồng',
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 10),
+          TextField(
+            controller: mstController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Mã số thuế',
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -140,6 +239,7 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
             nam: selectedYear,
             maHopDong: maHDController.text,
             tenKhachHang: tenKHController.text,
+            mst: mstController.text,
           );
         },
         icon: const Icon(Icons.search),
@@ -164,7 +264,9 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
         },
         children: [
           _buildTableHeader(),
-          ...viewModel.response!.listData.map((item) => _buildTableRow(item)).toList(),
+          ...viewModel.response!.listData
+              .map((item) => _buildTableRow(item))
+              .toList(),
         ],
       ),
     );
@@ -172,7 +274,7 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
 
   TableRow _buildTableHeader() {
     return TableRow(
-      decoration: BoxDecoration(color: Colors.grey[300]),
+      decoration: BoxDecoration(color: Colors.blue[100]),
       children: const [
         _TableCell(text: 'Hành động'),
         _TableCell(text: 'Mã HĐ'),
@@ -200,7 +302,9 @@ class _HoaDonScreenState extends State<HoaDonScreen> {
         ),
         _TableCell(text: item.hopDong.maHopDong),
         _TableCell(text: item.hopDong.tenKhachHang ?? ''),
-        _TableCell(text: '${formatCurrency(item.chiTietThanhToan.tongThanhTienSauVat)} đ'),
+        _TableCell(
+            text:
+                '${formatCurrency(item.chiTietThanhToan.tongThanhTienSauVat)} đ'),
       ],
     );
   }

@@ -9,6 +9,7 @@ class HoaDonService {
     required int nam,
     required String maHopDong,
     required String tenKhachHang,
+    required String mst,
   }) async {
 
     final response = await http.post(
@@ -22,6 +23,7 @@ class HoaDonService {
             "nam": nam,
             "maHopDong": maHopDong,
             "tenKhachHang": tenKhachHang,
+            "mst": mst,
       }),
     );
 
